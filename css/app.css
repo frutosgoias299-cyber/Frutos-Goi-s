@@ -45,21 +45,34 @@ body, html {
     object-fit: cover;
 }
 
+/* --- BOTÃO DE PULAR ABERTURA (MELHORADO) --- */
 #pular-abertura {
     position: absolute;
-    bottom: 40px;
+    top: 30px; /* Movido para a parte superior direita */
     right: 20px;
-    background: rgba(0, 255, 102, 0.1);
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro semi-transparente */
+    backdrop-filter: blur(8px); /* Efeito moderno de vidro fumado */
+    -webkit-backdrop-filter: blur(8px); /* Suporte extra para iPhones */
     border: 1px solid var(--cor-verde);
     color: var(--cor-verde);
-    padding: 8px 16px;
-    border-radius: 20px;
+    padding: 8px 20px;
+    border-radius: 30px; /* Formato pílula perfeita */
     font-family: 'Inter', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: 0.85rem;
+    font-weight: 700;
     cursor: pointer;
     z-index: 10000;
     text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Efeito de clique imersivo no telemóvel */
+#pular-abertura:active {
+    transform: scale(0.92);
+    background-color: var(--cor-verde);
+    color: #000;
 }
 
 /* --- CABEÇALHO --- */
