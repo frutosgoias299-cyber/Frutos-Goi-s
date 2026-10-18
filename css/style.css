@@ -133,26 +133,26 @@ section {
     display: inline-block;
     margin-top: 20px;
     padding: 18px 40px; 
-    background-color: var(--cor-verde); /* Fundo totalmente verde */
-    color: #000000; /* Letras pretas para contraste extremo */
+    background-color: var(--cor-verde); 
+    color: #000000; 
     font-family: 'Anton', sans-serif;
     font-size: 1.6rem;
     text-decoration: none;
     border: none;
-    border-radius: 50px; /* Formato arredondado estilo pílula */
+    border-radius: 50px; 
     text-transform: uppercase;
     letter-spacing: 1px;
     box-shadow: 0 0 20px rgba(0, 255, 102, 0.6);
     animation: pulsoNeon 2s infinite ease-in-out;
     transition: transform 0.1s ease, background-color 0.2s ease;
-    -webkit-tap-highlight-color: transparent; /* Remove aquele quadrado azul nativo dos telemóveis ao clicar */
+    -webkit-tap-highlight-color: transparent; 
 }
 
 /* Efeito de "clique" quando o cliente toca no botão no ecrã */
 .botao-neon:active {
     transform: scale(0.95);
-    background-color: #00cc55; /* Fica um verde ligeiramente mais escuro ao toque */
-    animation: none; /* Pára de pulsar enquanto está a ser pressionado */
+    background-color: #00cc55; 
+    animation: none; 
 }
 
 /* --- RESPONSIVIDADE (FOCO TOTAL EM TELEMÓVEIS) --- */
@@ -180,6 +180,11 @@ section {
         flex-direction: column;
         align-items: center;
         justify-content: center;
+    }
+
+    /* Levanta o botão no telemóvel para não ficar colado ao fundo */
+    .seccao-final {
+        padding-bottom: 25vh; 
     }
 
     .botao-neon {
