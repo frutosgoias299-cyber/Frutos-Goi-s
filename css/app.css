@@ -46,31 +46,34 @@ body, html {
 }
 
 /* --- BOTÃO DE PULAR ABERTURA (MELHORADO) --- */
+/* --- BOTÃO DE PULAR ABERTURA (CENTRO INFERIOR) --- */
 #pular-abertura {
-    position: absolute;
-    top: 30px; /* Movido para a parte superior direita */
-    right: 20px;
-    background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro semi-transparente */
-    backdrop-filter: blur(8px); /* Efeito moderno de vidro fumado */
-    -webkit-backdrop-filter: blur(8px); /* Suporte extra para iPhones */
+    position: fixed;
+    bottom: 15%; /* Fica na parte de baixo, deixando espaço para o picolé respirar */
+    left: 50%; /* Empurra para o meio... */
+    transform: translateX(-50%); /* ...e centra perfeitamente o botão! */
+    
+    background-color: rgba(0, 0, 0, 0.5); 
+    backdrop-filter: blur(8px); 
+    -webkit-backdrop-filter: blur(8px); 
     border: 1px solid var(--cor-verde);
     color: var(--cor-verde);
-    padding: 8px 20px;
-    border-radius: 30px; /* Formato pílula perfeita */
+    padding: 10px 35px; /* Ligeiramente mais largo para ficar bem ao centro */
+    border-radius: 30px; 
     font-family: 'Inter', sans-serif;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 700;
     cursor: pointer;
     z-index: 10000;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     transition: all 0.2s ease;
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Efeito de clique imersivo no telemóvel */
+/* Efeito de clique (temos de manter o translateX para não entortar quando encolhe) */
 #pular-abertura:active {
-    transform: scale(0.92);
+    transform: translateX(-50%) scale(0.92);
     background-color: var(--cor-verde);
     color: #000;
 }
