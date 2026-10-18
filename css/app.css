@@ -49,16 +49,16 @@ body, html {
 /* --- BOTÃO DE PULAR ABERTURA (CENTRO INFERIOR) --- */
 #pular-abertura {
     position: fixed;
-    bottom: 15%; /* Fica na parte de baixo, deixando espaço para o picolé respirar */
-    left: 50%; /* Empurra para o meio... */
-    transform: translateX(-50%); /* ...e centra perfeitamente o botão! */
+    bottom: 12%; /* Altura perfeita para ficar abaixo do picolé */
+    left: 50%; /* Empurra para o meio */
+    transform: translateX(-50%); /* Centra de forma absoluta */
     
     background-color: rgba(0, 0, 0, 0.5); 
     backdrop-filter: blur(8px); 
     -webkit-backdrop-filter: blur(8px); 
     border: 1px solid var(--cor-verde);
     color: var(--cor-verde);
-    padding: 10px 35px; /* Ligeiramente mais largo para ficar bem ao centro */
+    padding: 10px 35px;
     border-radius: 30px; 
     font-family: 'Inter', sans-serif;
     font-size: 0.9rem;
@@ -71,7 +71,6 @@ body, html {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Efeito de clique (temos de manter o translateX para não entortar quando encolhe) */
 #pular-abertura:active {
     transform: translateX(-50%) scale(0.92);
     background-color: var(--cor-verde);
