@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Frutos de Goiás | Ler QR Code</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css">
+    
+    <style>
+        /* Estilos exclusivos para a tela da câmara */
+        .area-leitor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 140px); /* Ocupa o ecrã menos a barra e o cabeçalho */
+            text-align: center;
+        }
+        
+        #reader {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid var(--cor-verde);
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.2);
+        }
+        
+        .instrucoes {
+            margin-bottom: 20px;
+            color: var(--cor-texto-sec);
+            font-size: 0.9rem;
+        }
+        
+        /* Ajuste estético para a biblioteca do QR Code */
+        #reader__dashboard_section_csr span { color: #FFF !important; }
+        #reader__dashboard_section_swaplink { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <header class="app-header">
+        <div class="logo-container">
+            <span class="logo-texto" style="color: #FFF;">LEITOR DE MESA</span>
+        </div>
+    </header>
+
+    <!-- Área Principal (Câmara) -->
+    <main class="app-conteudo">
+        <div class="area-leitor">
+            <h2 class="titulo-seccao" style="margin-bottom: 5px;">QR CODE</h2>
+            <p class="instrucoes">Aponte a câmara para o código na sua mesa.</p>
+            
+            <!-- A câmara vai aparecer dentro desta div -->
+            <div id="reader"></div>
+        </div>
+    </main>
+
+    <!-- Barra de Navegação Inferior -->
+    <nav class="bottom-bar">
+        <a href="index.html" class="nav-item">
+            <span class="icone">🏠</span>
+            <span>Início</span>
+        </a>
+        <a href="app.html" class="nav-item">
+            <span class="icone">🍦</span>
+            <span>Cardápio</span>
+        </a>
+        <a href="leitor.html" class="nav-item ativo">
+            <span class="icone">📷</span>
+            <span>Ler QR</span>
+        </a>
+        <a href="carrinho.html" class="nav-item">
+            <div class="icone-com-badge">
+                <span class="icone">🛒</span>
+                <span id="badge-carrinho" class="badge-oculto">0</span>
+            </div>
+            <span>Carrinho</span>
+        </a>
+    </nav>
+
+    <!-- Importar o Motor do Carrinho para manter a bolinha atualizada -->
+    <script src="js/carrinho.js"></script>
+
+    <!-- Importar a biblioteca da Câmara -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <!-- Script para Ligar a Câmara -->
+    <script>
+        function aoLerQRCodeSucesso(textoDecodificado, resultadoDecodificado) {
+            // O que acontece quando lê com sucesso!
+            alert(`QR Code LIDO: ${textoDecodificado}`);
+            
+            // Aqui vamos programar depois para mudar o tipo de pedido para "Mesa X"
+            // Por enquanto, redireciona o cliente de volta para o cardápio
+            window.location.href = "app.html";
+        }
+
+        function aoLerQRCodeErro(erro) {
+            // Fica calado a procurar o código (não fazemos nada aqui)
+        }
+
+        // Ligar o leitor
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            { fps: 10, qrbox: {width: 250, height: 250} },
+            /* verbose= */ false);
+            
+        html5QrcodeScanner.render(aoLerQRCodeSucesso, aoLerQRCodeErro);
+    </script>
+</body>
+</html>

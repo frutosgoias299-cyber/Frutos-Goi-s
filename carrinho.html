@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Frutos de Goiás | Carrinho</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css">
+    <style>
+        /* Estilos específicos para a tela do carrinho */
+        .item-carrinho {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--cor-card);
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border: 1px solid #222;
+        }
+        .item-info h4 { margin: 0 0 5px 0; font-size: 1rem; }
+        .item-preco { color: var(--cor-verde); font-weight: bold; font-family: 'Anton', sans-serif; letter-spacing: 1px;}
+        .btn-remover { background: transparent; border: none; color: #ff4444; font-size: 1.2rem; cursor: pointer; }
+        
+        .resumo-pedido {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+        .linha-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: 'Anton', sans-serif;
+            margin-bottom: 20px;
+        }
+        .btn-finalizar {
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .carrinho-vazio { text-align: center; color: var(--cor-texto-sec); padding: 40px 0; }
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <header class="app-header">
+        <div class="logo-container">
+            <span class="logo-texto" style="color: #FFF;">MEU CARRINHO</span>
+        </div>
+    </header>
+
+    <!-- Lista de Produtos e Total -->
+    <main class="app-conteudo">
+        <div id="lista-carrinho">
+            <!-- O JavaScript vai injetar os produtos aqui -->
+        </div>
+        
+        <div class="resumo-pedido">
+            <div class="linha-total">
+                <span>Total:</span>
+                <span id="valor-total" style="color: var(--cor-verde);">R$ 0,00</span>
+            </div>
+            <a href="#" class="botao-neon btn-finalizar">FINALIZAR PEDIDO</a>
+        </div>
+    </main>
+
+    <!-- Barra de Navegação -->
+    <nav class="bottom-bar">
+        <a href="index.html" class="nav-item">
+            <span class="icone">🏠</span>
+            <span>Início</span>
+        </a>
+        <a href="app.html" class="nav-item">
+            <span class="icone">🍦</span>
+            <span>Cardápio</span>
+        </a>
+        <a href="leitor.html" class="nav-item">
+            <span class="icone">📷</span>
+            <span>Ler QR</span>
+        </a>
+        <a href="carrinho.html" class="nav-item ativo">
+            <div class="icone-com-badge">
+                <span class="icone">🛒</span>
+                <span id="badge-carrinho" class="badge-oculto">0</span>
+            </div>
+            <span>Carrinho</span>
+        </a>
+    </nav>
+
+    <!-- Liga ao nosso motor para ler a memória -->
+    <script src="js/carrinho.js"></script>
+    
+    <!-- Script exclusivo para desenhar os itens na tela -->
+    <script>
+        const containerLista = document.getElementById('lista-carrinho');
+        const elementoTotal = document.getElementById('valor-total');
+        
+        function renderizarCarrinho() {
+            containerLista.innerHTML = ''; 
+            let total = 0;
+            
+            if (carrinho.length === 0) {
+                containerLista.innerHTML = '<div class="carrinho-vazio">O teu carrinho está vazio. 🍦</div>';
+                elementoTotal.textContent = 'R$ 0,00';
+                return;
+            }
+            
+            carrinho.forEach((item, index) => {
+                total += item.preco;
+                containerLista.innerHTML += `
+                    <div class="item-carrinho">
+                        <div class="item-info">
+                            <h4>${item.nome}</h4>
+                            <span class="item-preco">R$ ${item.preco.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                        <button onclick="removerItem(${index})" class="btn-remover">🗑️</button>
+                    </div>
+                `;
+            });
+            
+            // Atualiza o valor total com o formato de moeda brasileiro
+            elementoTotal.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+        
+        function removerItem(index) {
+            carrinho.splice(index, 1); // Remove da lista
+            salvarCarrinho(); // Função que está no carrinho.js
+            renderizarCarrinho(); // Atualiza o desenho na tela
+        }
+        
+        // Assim que a página abre, desenha a lista
+        renderizarCarrinho();
+    </script>
+</body>
+</html>

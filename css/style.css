@@ -1,0 +1,163 @@
+:root {
+    --cor-verde: #00FF66;
+    --cor-fundo: #000000;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: var(--cor-fundo);
+    color: #FFF;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+/* O contentor fixo no fundo */
+.video-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+}
+
+/* A tela que vai mostrar as tuas 160 fotos */
+canvas#tela-gelado {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* O vidro estilhaçado com efeito de luz (screen) */
+#vidro-quebrado {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 1; 
+    mix-blend-mode: screen; 
+    pointer-events: none;
+}
+
+/* Estrutura das secções e textos */
+main {
+    position: relative;
+    z-index: 2;
+}
+
+section {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 5%;
+}
+
+.seccao-vidro {
+    align-items: center;
+    text-align: center;
+}
+
+.texto-impacto {
+    font-family: 'Anton', sans-serif;
+    font-size: 6rem;
+    margin: 0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--cor-verde);
+}
+
+.subtitulo {
+    font-size: 1.5rem;
+    margin-top: -10px;
+    color: var(--cor-verde);
+}
+
+.sabor-texto {
+    font-family: 'Anton', sans-serif;
+    font-size: 4rem;
+    margin: 0;
+    line-height: 1.1;
+}
+
+.verde { color: var(--cor-verde); }
+.branco { color: #FFF; }
+
+.conteudo-esquerdo { text-align: left; }
+.conteudo-direito { text-align: right; margin-left: auto; }
+
+/* --- ESTILOS DO BOTÃO NÉON E ANIMAÇÃO --- */
+@keyframes pulsoNeon {
+    0% { box-shadow: 0 0 10px var(--cor-verde); transform: scale(1); }
+    50% { box-shadow: 0 0 30px var(--cor-verde), 0 0 15px rgba(255, 255, 255, 0.5); transform: scale(1.05); }
+    100% { box-shadow: 0 0 10px var(--cor-verde); transform: scale(1); }
+}
+
+.botao-neon {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 40px;
+    background-color: transparent;
+    color: var(--cor-verde);
+    font-family: 'Anton', sans-serif;
+    font-size: 1.5rem;
+    text-decoration: none;
+    border: 2px solid var(--cor-verde);
+    border-radius: 5px;
+    text-transform: uppercase;
+    animation: pulsoNeon 2s infinite ease-in-out;
+}
+
+/* --- RESPONSIVIDADE (FOCO TOTAL EM TELEMÓVEIS) --- */
+@media (max-width: 768px) {
+    .texto-impacto {
+        font-size: 3.5rem; 
+        line-height: 1;
+    }
+    
+    .subtitulo {
+        font-size: 1.2rem;
+        margin-top: 10px;
+    }
+    
+    .sabor-texto {
+        font-size: 3rem; 
+        text-align: center;
+    }
+    
+    .conteudo-esquerdo, .conteudo-direito {
+        text-align: center;
+        margin: 0 auto;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .botao-neon {
+        font-size: 1.2rem;
+        padding: 12px 30px;
+        margin-top: 30px;
+        width: 80%;
+        max-width: 300px;
+    }
+    /* --- TELA FINAL AO CENTRO --- */
+.conteudo-centro {
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.seccao-final {
+    height: 100vh;
+}
+}

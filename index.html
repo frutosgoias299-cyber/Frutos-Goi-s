@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frutos de Goiás | Experiência</title>
+    <!-- Fontes do Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Liga ao teu CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Scripts do GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+
+<body>
+
+    <!-- CAMADA 1: A Tela de Fotos (Substitui o vídeo pesado) -->
+    <div class="video-container">
+        <canvas id="tela-gelado"></canvas>
+    </div>
+
+    <!-- CAMADA 2: O Vidro Quebrado -->
+    <img id="vidro-quebrado" src="vidro.jpeg" alt="Vidro Quebrado">
+
+    <!-- CAMADA 3: Textos e Interação -->
+    <main>
+        <!-- 1. TELA INICIAL (O Vidro) -->
+        <section class="seccao-vidro">
+            <h1 class="texto-impacto">FRUTOS DE GOIÁS</h1>
+            <p class="subtitulo">A experiência</p>
+        </section>
+
+        <!-- 2. TEXTOS NO MEIO DO CAMINHO -->
+        <section class="seccao-sabor">
+            <div class="conteudo-esquerdo">
+                <h2 class="sabor-texto verde">SINTA O SABOR</h2>
+                <h2 class="sabor-texto branco">DA NATUREZA</h2>
+            </div>
+        </section>
+
+        <!-- Podes adicionar mais textos no meio do caminho assim -->
+        <section class="seccao-sabor">
+            <div class="conteudo-direito">
+                <h2 class="sabor-texto verde">100%</h2>
+                <h2 class="sabor-texto branco">ARTESANAL</h2>
+            </div>
+        </section>
+
+        <!-- 3. A PISTA DE SCROLL (Espaço vazio onde apenas o gelado roda) -->
+        <section style="height: 150vh; pointer-events: none;"></section>
+
+        <!-- 4. TELA FINAL (Aparece quando o scroll bate no fundo) -->
+        <section class="seccao-sabor seccao-final">
+            <div class="conteudo-centro">
+                <h2 class="sabor-texto verde">ENERGIA</h2>
+                <h2 class="sabor-texto branco">TROPICAL</h2>
+                <a href="app.html" class="botao-neon sabor-texto">PEDIR AGORA</a>
+            </div>
+        </section>
+    </main>
+    <!-- Liga ao teu JavaScript -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>
