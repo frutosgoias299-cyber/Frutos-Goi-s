@@ -7,9 +7,8 @@
     <title>Frutos de Goiás | Experiência</title>
     <!-- Fontes do Google -->
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Liga ao teu CSS -->
-    <!-- Coloquei ?v=5 aqui para limpar a cache do teu telemóvel na hora -->
-    <link rel="stylesheet" href="css/style.css?v=5">
+    <!-- Liga ao teu CSS (v=6 para limpar a cache) -->
+    <link rel="stylesheet" href="css/style.css?v=6">
     <!-- Scripts do GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -22,15 +21,21 @@
         <canvas id="tela-gelado"></canvas>
     </div>
 
-    <!-- CAMADA 2: O Vidro Quebrado -->
-    <img id="vidro-quebrado" src="vidro.jpeg" alt="Vidro Quebrado">
+    <!-- CAMADA 2: O Vidro Quebrado (Comentado) -->
+    <!-- <img id="vidro-quebrado" src="vidro.jpeg" alt="Vidro Quebrado"> -->
+
+    <!-- BOTÃO EXPLORAR (Auto-scroll para guiar o cliente) -->
+    <div id="btn-explorar" onclick="descerAutomaticamente()">
+        <span>Explorar</span>
+        <div class="seta">↓</div>
+    </div>
 
     <!-- CAMADA 3: Textos e Interação -->
     <main>
-        <!-- 1. SECÇÃO FANTASMA (Adicionada ao TOPO para gastar a animação branca do vidro) -->
+        <!-- 1. SECÇÃO FANTASMA (Para gastar a animação inicial do canvas) -->
         <section style="height: 180vh; pointer-events: none;"></section>
 
-        <!-- 2. TELA INICIAL (O texto entra apenas depois do scroll passar a secção fantasma) -->
+        <!-- 2. TELA INICIAL -->
         <section class="seccao-vidro">
             <h1 class="texto-impacto">FRUTOS DE GOIÁS</h1>
             <p class="subtitulo">A experiência</p>
@@ -52,7 +57,7 @@
             </div>
         </section>
 
-        <!-- 5. TELA FINAL (Aparece quando o scroll bate no fundo) -->
+        <!-- 5. TELA FINAL -->
         <section class="seccao-sabor seccao-final">
             <div class="conteudo-centro">
                 <h2 class="sabor-texto verde">ENERGIA</h2>
@@ -61,7 +66,48 @@
             </div>
         </section>
     </main>
-    <!-- Liga ao teu JavaScript -->
+
+    <!-- Estilo rápido do botão Explorar inserido diretamente para garantir funcionamento imediato -->
+    <style>
+        #btn-explorar {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            text-align: center;
+            color: var(--cor-verde, #00FF66);
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            cursor: pointer;
+            animation: saltitar 2s infinite;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
+            -webkit-tap-highlight-color: transparent;
+        }
+        #btn-explorar .seta {
+            font-size: 2rem;
+            margin-top: -5px;
+        }
+        @keyframes saltitar {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, 12px); }
+        }
+    </style>
+
+    <!-- Script para o botão Explorar descer a tela suavemente -->
+    <script>
+        function descerAutomaticamente() {
+            window.scrollBy({
+                top: window.innerHeight * 1.5,
+                behavior: 'smooth'
+            });
+            document.getElementById('btn-explorar').style.display = 'none';
+        }
+    </script>
+
+    <!-- Liga ao teu JavaScript principal -->
     <script src="js/main.js"></script>
 </body>
 
