@@ -8,7 +8,8 @@
     <!-- Fontes do Google -->
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <!-- Liga ao teu CSS -->
-    <link rel="stylesheet" href="css/style.css">
+    <!-- Coloquei ?v=5 aqui para limpar a cache do teu telemóvel na hora -->
+    <link rel="stylesheet" href="css/style.css?v=5">
     <!-- Scripts do GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -26,13 +27,16 @@
 
     <!-- CAMADA 3: Textos e Interação -->
     <main>
-        <!-- 1. TELA INICIAL (O Vidro) -->
+        <!-- 1. SECÇÃO FANTASMA (Adicionada ao TOPO para gastar a animação branca do vidro) -->
+        <section style="height: 180vh; pointer-events: none;"></section>
+
+        <!-- 2. TELA INICIAL (O texto entra apenas depois do scroll passar a secção fantasma) -->
         <section class="seccao-vidro">
             <h1 class="texto-impacto">FRUTOS DE GOIÁS</h1>
             <p class="subtitulo">A experiência</p>
         </section>
 
-        <!-- 2. TEXTOS NO MEIO DO CAMINHO -->
+        <!-- 3. TEXTOS NO MEIO DO CAMINHO -->
         <section class="seccao-sabor">
             <div class="conteudo-esquerdo">
                 <h2 class="sabor-texto verde">SINTA O SABOR</h2>
@@ -40,7 +44,7 @@
             </div>
         </section>
 
-        <!-- Podes adicionar mais textos no meio do caminho assim -->
+        <!-- 4. MAIS TEXTOS NO MEIO DO CAMINHO -->
         <section class="seccao-sabor">
             <div class="conteudo-direito">
                 <h2 class="sabor-texto verde">100%</h2>
@@ -48,10 +52,7 @@
             </div>
         </section>
 
-        <!-- 3. A PISTA DE SCROLL (Espaço vazio onde apenas o gelado roda) -->
-        <section style="height: 150vh; pointer-events: none;"></section>
-
-        <!-- 4. TELA FINAL (Aparece quando o scroll bate no fundo) -->
+        <!-- 5. TELA FINAL (Aparece quando o scroll bate no fundo) -->
         <section class="seccao-sabor seccao-final">
             <div class="conteudo-centro">
                 <h2 class="sabor-texto verde">ENERGIA</h2>
