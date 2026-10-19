@@ -28,12 +28,13 @@
         }
         .badge-codigo {
             background: rgba(255, 255, 255, 0.08);
-            color: #888;
+            color: #00FF66;
             font-size: 0.75rem;
             padding: 2px 6px;
             border-radius: 4px;
             margin-right: 6px;
             font-family: monospace;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -55,6 +56,17 @@
         <button class="btn-categoria" onclick="selecionarCategoria('gelados')">Taças & Gelados</button>
         <button class="btn-categoria" onclick="selecionarCategoria('acai')">Açaí</button>
     </nav>
+
+    <!-- Contentor do Banner Promocional -->
+    <div id="banner-promocional-container" style="padding: 10px 20px 0; display: none;">
+        <div id="banner-promocional-corpo" style="border-radius: 16px; overflow: hidden; position: relative; height: 140px; background-size: cover; background-position: center; border: 1px solid rgba(0, 255, 102, 0.3); display: flex; flex-direction: column; justify-content: flex-end; padding: 16px;">
+            <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 10%, rgba(0, 0, 0, 0.85) 100%);"></div>
+            <div style="position: relative; z-index: 1;">
+                <h3 id="banner-promocional-titulo" style="font-size: 1.15rem; color: #00FF66; font-weight: 700;"></h3>
+                <p id="banner-promocional-subtitulo" style="font-size: 0.82rem; color: #fff; margin-top: 3px;"></p>
+            </div>
+        </div>
+    </div>
 
     <main class="vitrine" id="grid-vitrine"></main>
 
@@ -90,6 +102,21 @@
                 produtos = JSON.parse(localStorage.getItem('produtos_banco_mock')) || [];
             }
             filtrarProdutos();
+        }
+
+        async function carregarBannerAtivo() {
+            try {
+                const res = await fetch('/api/banners');
+                if (!res.ok) return;
+                const banners = await res.json();
+                const ativo = banners.find(b => b.ativo !== false);
+                if (ativo) {
+                    document.getElementById('banner-promocional-container').style.display = 'block';
+                    document.getElementById('banner-promocional-corpo').style.backgroundImage = `url('${ativo.imagem_url}')`;
+                    document.getElementById('banner-promocional-titulo').innerText = ativo.titulo;
+                    document.getElementById('banner-promocional-subtitulo').innerText = ativo.subtitulo || '';
+                }
+            } catch (e) {}
         }
 
         function renderizarVitrine(lista) {
@@ -177,14 +204,18 @@
             let msg = `Olá! Pedido da *${mesa}*:%0A%0A`;
             let total = 0;
             Object.values(pedido).forEach(item => {
-                msg += `• ${item.qtd}x ${item.nome} - R$ ${(item.preco * item.qtd).toFixed(2).replace('.', ',')}%0A`;
+                const subtotal = (item.preco * item.qtd).toFixed(2).replace('.', ',');
+                msg += `• ${item.qtd}x ${item.nome} - R$ ${subtotal}%0A`;
                 total += (item.preco * item.qtd);
             });
             msg += `%0A*Total: R$ ${total.toFixed(2).replace('.', ',')}*`;
             window.open(`https://wa.me/5589999999999?text=${msg}`, '_blank');
         }
 
-        document.addEventListener('DOMContentLoaded', carregarProdutos);
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarProdutos();
+            carregarBannerAtivo();
+        });
     </script>
 </body>
 </html>

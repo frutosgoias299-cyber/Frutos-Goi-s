@@ -3,56 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Executivo | Frutos de Goiás</title>
+    <title>Painel Administrativo | Frutos de Goiás</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/admin.css?v=3">
+    <link rel="stylesheet" href="css/admin.css?v=4">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        .tabs-admin {
+        /* Barra de Navegação por Botões de Classe */
+        .nav-classes {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             overflow-x: auto;
-            margin-bottom: 24px;
-            padding-bottom: 6px;
+            padding: 8px 0 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             scrollbar-width: none;
         }
-        .tabs-admin::-webkit-scrollbar { display: none; }
-        .tab-btn {
+        .nav-classes::-webkit-scrollbar { display: none; }
+
+        .btn-classe {
             background: #141715;
             color: #9e9e9e;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 0.88rem;
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .tab-btn.ativo {
-            background: #00FF66;
-            color: #0b0d0c;
+
+        .btn-classe:hover {
             border-color: #00FF66;
+            color: #FFF;
         }
-        .cards-kpi {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
+
+        .btn-classe.ativa {
+            background: #00FF66;
+            color: #0B0D0C;
+            border-color: #00FF66;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0, 255, 102, 0.25);
         }
-        .card-kpi {
-            background: #141715;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 18px;
+
+        .painel-conteudo-aba {
+            display: none;
         }
-        .kpi-label { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
-        .kpi-valor { font-size: 1.6rem; font-weight: 700; color: #00FF66; margin-top: 6px; }
-        .secao-tab { display: none; }
-        .secao-tab.ativa { display: block; }
-        .alerta-estoque { color: #ff4d4d; font-weight: bold; font-size: 0.8rem; }
+
+        .painel-conteudo-aba.visivel {
+            display: block;
+            animation: surgirSuave 0.25s ease-out;
+        }
+
+        @keyframes surgirSuave {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cartão de Banner Promocional */
+        .card-banner-preview {
+            position: relative;
+            height: 160px;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 16px;
+            margin-bottom: 15px;
+        }
+
+        .card-banner-preview::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 20%, rgba(0, 0, 0, 0.85) 100%);
+        }
+
+        .card-banner-texto {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-banner-texto h3 {
+            font-size: 1.1rem;
+            color: #00FF66;
+            margin: 0;
+        }
+
+        .card-banner-texto p {
+            font-size: 0.8rem;
+            color: #ddd;
+            margin-top: 4px;
+        }
+
+        .alerta-estoque-critico {
+            color: #FF4D4D;
+            font-weight: bold;
+            font-size: 0.78rem;
+            padding: 2px 8px;
+            background: rgba(255, 77, 77, 0.1);
+            border-radius: 6px;
+        }
     </style>
 </head>
 <body>
@@ -62,42 +122,27 @@
         <header class="topo-admin">
             <div class="marca-admin">
                 <h1>Frutos de Goiás</h1>
-                <span>Gestão Empresarial</span>
+                <span>Painel de Controlo</span>
             </div>
-            <a href="cardapio.html" target="_blank" class="btn-link-cardapio">Abrir Cardápio ↗</a>
+            <a href="cardapio.html" target="_blank" class="btn-link-cardapio">Visualizar Cardápio ↗</a>
         </header>
 
-        <!-- Métricas Rápidas do Dia -->
-        <div class="cards-kpi">
-            <div class="card-kpi">
-                <span class="kpi-label">Vendas Hoje</span>
-                <div class="kpi-valor" id="kpi-faturamento">R$ 0,00</div>
-            </div>
-            <div class="card-kpi">
-                <span class="kpi-label">Pedidos Concluídos</span>
-                <div class="kpi-valor" id="kpi-pedidos">0</div>
-            </div>
-            <div class="card-kpi">
-                <span class="kpi-label">Itens no Catálogo</span>
-                <div class="kpi-valor" id="kpi-produtos">0</div>
-            </div>
-        </div>
-
-        <!-- Abas de Navegação -->
-        <div class="tabs-admin">
-            <button class="tab-btn ativo" onclick="trocarAba('estoque')">📦 Stock & Saídas</button>
-            <button class="tab-btn" onclick="trocarAba('vendas')">💳 Registar Venda</button>
-            <button class="tab-btn" onclick="trocarAba('produtos')">🍦 Produtos</button>
-            <button class="tab-btn" onclick="trocarAba('equipe')">👥 Equipa</button>
-            <button class="tab-btn" onclick="trocarAba('qrcodes')">📱 QR Mesas & Impressão</button>
-        </div>
+        <!-- Navegação por Classes (Botões Visíveis e Diretos) -->
+        <nav class="nav-classes">
+            <button class="btn-classe ativa" onclick="abrirClasse('estoque')">📦 Estoque & Saídas</button>
+            <button class="btn-classe" onclick="abrirClasse('vendas')">💳 Caixa & Vendas</button>
+            <button class="btn-classe" onclick="abrirClasse('produtos')">🍦 Cadastrar Produto</button>
+            <button class="btn-classe" onclick="abrirClasse('banners')">🏷️ Banners Promocionais</button>
+            <button class="btn-classe" onclick="abrirClasse('equipe')">👥 Equipe</button>
+            <button class="btn-classe" onclick="abrirClasse('mesas')">📱 QR Mesas & Impressão</button>
+        </nav>
 
         <div id="alerta-feedback" class="alerta-feedback"></div>
 
-        <!-- ABA 1: CONTROLO DE STOCK & SAÍDAS -->
-        <section id="tab-estoque" class="secao-tab ativa">
+        <!-- 1. CLASSE: CONTROLO DE ESTOQUE & SAÍDAS -->
+        <section id="aba-estoque" class="painel-conteudo-aba visivel">
             <div class="painel-secao">
-                <h2 class="secao-titulo">Movimentação de Stock (Entrada / Saída)</h2>
+                <h2 class="secao-titulo">Movimentação de Estoque</h2>
                 <form id="form-movimentacao" class="grid-formulario">
                     <div class="grupo-input">
                         <label>Produto</label>
@@ -112,48 +157,48 @@
                     </div>
                     <div class="grupo-input">
                         <label>Quantidade</label>
-                        <input type="number" id="mov-qtd" min="1" placeholder="Ex: 10" required>
+                        <input type="number" id="mov-qtd" min="1" placeholder="Ex: 20" required>
                     </div>
                     <div class="grupo-input">
-                        <label>Motivo</label>
-                        <input type="text" id="mov-motivo" placeholder="Ex: Lote novo ou Picolé avariado" required>
+                        <label>Motivo da Operação</label>
+                        <input type="text" id="mov-motivo" placeholder="Ex: Lote novo ou Picolé derretido" required>
                     </div>
-                    <button type="submit" class="btn-principal">Registar Movimentação</button>
+                    <button type="submit" class="btn-principal">Salvar Movimentação</button>
                 </form>
             </div>
 
             <div class="painel-secao">
-                <h2 class="secao-titulo">Posição Atual de Stock</h2>
+                <h2 class="secao-titulo">Estoque Atual em Loja</h2>
                 <div class="lista-produtos" id="lista-estoque"></div>
             </div>
         </section>
 
-        <!-- ABA 2: REGISTAR VENDA RÁPIDA / CAIXA -->
-        <section id="tab-vendas" class="secao-tab">
+        <!-- 2. CLASSE: VENDAS & CAIXA -->
+        <section id="aba-vendas" class="painel-conteudo-aba">
             <div class="painel-secao">
-                <h2 class="secao-titulo">Novo Pedido / Venda Balcão</h2>
+                <h2 class="secao-titulo">Registrar Venda Balcão</h2>
                 <form id="form-venda" class="grid-formulario">
                     <div class="grupo-input">
-                        <label>Atendente / Responsável</label>
+                        <label>Atendente</label>
                         <select id="venda-funcionario" required></select>
                     </div>
                     <div class="grupo-input">
-                        <label>Mesa ou Origem</label>
+                        <label>Mesa / Balcão</label>
                         <input type="text" id="venda-mesa" value="Balcão" required>
                     </div>
                     <div class="grupo-input">
-                        <label>Produto</label>
+                        <label>Selecionar Produto</label>
                         <select id="venda-produto-select"></select>
                     </div>
                     <div class="grupo-input">
-                        <label>Quantidade</label>
+                        <label>Qtd</label>
                         <input type="number" id="venda-qtd" min="1" value="1">
                     </div>
-                    <button type="button" class="btn-secundario" onclick="adicionarItemVenda()" style="grid-column: span 2;">+ Adicionar Produto ao Pedido</button>
+                    <button type="button" class="btn-secundario" onclick="adicionarItemVenda()" style="grid-column: span 2;">+ Adicionar ao Pedido</button>
 
-                    <div class="campo-full" style="margin-top: 10px;">
-                        <ul id="itens-venda-carrinho" style="list-style: none; padding: 0;"></ul>
-                        <div style="font-size: 1.2rem; font-weight: bold; margin: 15px 0; color: #00FF66;">
+                    <div class="campo-full">
+                        <ul id="itens-venda-carrinho" style="list-style: none; padding: 10px 0;"></ul>
+                        <div style="font-size: 1.25rem; font-weight: bold; color: #00FF66; margin: 10px 0;">
                             Total: R$ <span id="venda-total-acumulado">0,00</span>
                         </div>
                     </div>
@@ -167,13 +212,13 @@
                             <option value="DINHEIRO">Dinheiro</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn-principal">Finalizar Venda & Baixar Stock</button>
+                    <button type="submit" class="btn-principal">Concluir Venda & Baixar Estoque</button>
                 </form>
             </div>
         </section>
 
-        <!-- ABA 3: CADASTRO DE PRODUTOS -->
-        <section id="tab-produtos" class="secao-tab">
+        <!-- 3. CLASSE: CADASTRAR PRODUTO -->
+        <section id="aba-produtos" class="painel-conteudo-aba">
             <div class="painel-secao">
                 <h2 class="secao-titulo">Cadastrar Novo Produto</h2>
                 <form id="form-cadastro" class="grid-formulario">
@@ -199,24 +244,56 @@
                         <input type="number" step="0.50" id="preco" required>
                     </div>
                     <div class="grupo-input campo-full">
-                        <label>URL da Imagem</label>
-                        <input type="url" id="imagem_url">
+                        <label>URL da Fotografia</label>
+                        <input type="url" id="imagem_url" placeholder="https://exemplo.com/foto.jpg">
                     </div>
                     <div class="grupo-input campo-full">
                         <label>Descrição</label>
                         <textarea id="descricao" rows="2"></textarea>
                     </div>
-                    <button type="submit" class="btn-principal">Salvar Produto</button>
+                    <button type="submit" class="btn-principal">Salvar no Catálogo</button>
                 </form>
             </div>
+
             <div class="painel-secao">
                 <h2 class="secao-titulo">Produtos no Sistema</h2>
                 <div class="lista-produtos" id="lista-produtos"></div>
             </div>
         </section>
 
-        <!-- ABA 4: CONTROLO DE EQUIPA -->
-        <section id="tab-equipe" class="secao-tab">
+        <!-- 4. CLASSE: BANNERS PROMOCIONAIS -->
+        <section id="aba-banners" class="painel-conteudo-aba">
+            <div class="painel-secao">
+                <h2 class="secao-titulo">Criar Banner Promocional</h2>
+                <form id="form-banner" class="grid-formulario">
+                    <div class="grupo-input">
+                        <label>Título do Banner</label>
+                        <input type="text" id="banner-titulo" placeholder="Ex: Festival de Taças" required>
+                    </div>
+                    <div class="grupo-input">
+                        <label>Subtítulo / Promoção</label>
+                        <input type="text" id="banner-subtitulo" placeholder="Ex: Na compra de 2 ganhe 1 cobertura">
+                    </div>
+                    <div class="grupo-input campo-full">
+                        <label>URL da Imagem do Banner</label>
+                        <input type="url" id="banner-imagem" placeholder="https://exemplo.com/banner-promocional.jpg" required>
+                    </div>
+                    <div class="grupo-input campo-full">
+                        <label>Link de Destino / Ação (Opcional)</label>
+                        <input type="text" id="banner-link" placeholder="#gelados ou cardapio.html">
+                    </div>
+                    <button type="submit" class="btn-principal">Publicar Banner</button>
+                </form>
+            </div>
+
+            <div class="painel-secao">
+                <h2 class="secao-titulo">Banners Ativos</h2>
+                <div id="lista-banners"></div>
+            </div>
+        </section>
+
+        <!-- 5. CLASSE: CONTROLO DE EQUIPE -->
+        <section id="aba-equipe" class="painel-conteudo-aba">
             <div class="painel-secao">
                 <h2 class="secao-titulo">Cadastrar Colaborador</h2>
                 <form id="form-equipe" class="grid-formulario">
@@ -228,37 +305,37 @@
                         <label>Cargo</label>
                         <select id="eq-cargo">
                             <option value="Atendente">Atendente</option>
-                            <option value="Caixa">Operador de Caixa</option>
+                            <option value="Caixa">Caixa</option>
                             <option value="Gerente">Gerente</option>
                         </select>
                     </div>
                     <div class="grupo-input campo-full">
-                        <label>PIN / Chave de Acesso Rápida</label>
-                        <input type="text" id="eq-chave" placeholder="Ex: 4 dígitos (ex: 2026)" required>
+                        <label>Chave de Acesso / PIN (4 dígitos)</label>
+                        <input type="text" id="eq-chave" placeholder="Ex: 2026" required>
                     </div>
                     <button type="submit" class="btn-principal">Cadastrar Membro</button>
                 </form>
             </div>
             <div class="painel-secao">
-                <h2 class="secao-titulo">Membros da Equipa</h2>
+                <h2 class="secao-titulo">Colaboradores Cadastrados</h2>
                 <div class="lista-produtos" id="lista-equipe"></div>
             </div>
         </section>
 
-        <!-- ABA 5: QR CODES & IMPRESSÃO -->
-        <section id="tab-qrcodes" class="secao-tab">
+        <!-- 6. CLASSE: QR MESAS & IMPRESSÃO -->
+        <section id="aba-mesas" class="painel-conteudo-aba">
             <div class="painel-secao">
-                <h2 class="secao-titulo">Cardápio Físico & Mesas</h2>
-                <button class="btn-principal" onclick="abrirCardapioImpressao()" style="margin-bottom: 20px;">📄 Gerar & Imprimir Cardápio A4 da Loja</button>
+                <h2 class="secao-titulo">Impressão e Mesas Físicas</h2>
+                <button class="btn-principal" onclick="abrirCardapioImpressao()" style="margin-bottom: 20px;">📄 Imprimir Cardápio de Mesa (Formato A4)</button>
                 
-                <h3 style="font-size: 1rem; margin-bottom: 10px; color: #00FF66;">Gerador de QR Code de Mesa</h3>
+                <h3 style="font-size: 1rem; color: #00FF66; margin-bottom: 12px;">Gerador de QR Code de Mesa</h3>
                 <div class="grid-formulario">
                     <div class="grupo-input">
-                        <label>Mesa</label>
+                        <label>Número da Mesa</label>
                         <input type="number" id="num-mesa" value="1" min="1" max="50">
                     </div>
                     <div class="grupo-input">
-                        <label>URL Base</label>
+                        <label>URL Base da Loja</label>
                         <input type="text" id="url-base-qr">
                     </div>
                     <button type="button" class="btn-secundario" onclick="gerarQRCodeMesa()" style="grid-column: span 2;">Gerar Placa da Mesa</button>
@@ -277,15 +354,18 @@
     <script>
         let catalogo = [];
         let equipe = [];
+        let banners = [];
         let itensVendaAtual = [];
 
         document.getElementById('url-base-qr').value = window.location.href.replace('admin.html', 'cardapio.html');
 
-        function trocarAba(abaId) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('ativo'));
-            document.querySelectorAll('.secao-tab').forEach(s => s.classList.remove('ativa'));
-            event.target.classList.add('ativo');
-            document.getElementById(`tab-${abaId}`).classList.add('ativa');
+        // Alternar visualização pelas classes/botões
+        function abrirClasse(idClasse) {
+            document.querySelectorAll('.btn-classe').forEach(b => b.classList.remove('ativa'));
+            document.querySelectorAll('.painel-conteudo-aba').forEach(s => s.classList.remove('visivel'));
+            
+            event.currentTarget.classList.add('ativa');
+            document.getElementById(`aba-${idClasse}`).classList.add('visivel');
         }
 
         function emitirFeedback(texto, tipo = 'sucesso') {
@@ -296,30 +376,18 @@
             setTimeout(() => { caixa.style.display = 'none'; }, 3500);
         }
 
-        async function inicializarDados() {
-            await Promise.all([carregarCatalogo(), carregarEquipe(), carregarMetricas()]);
+        async function inicializarPainel() {
+            await Promise.all([carregarCatalogo(), carregarEquipe(), carregarBanners()]);
             popularSelects();
-        }
-
-        async function carregarMetricas() {
-            try {
-                const res = await fetch('/api/vendas/resumo-hoje');
-                if (res.ok) {
-                    const dados = await res.json();
-                    document.getElementById('kpi-faturamento').innerText = `R$ ${parseFloat(dados.faturamento_total).toFixed(2).replace('.', ',')}`;
-                    document.getElementById('kpi-pedidos').innerText = dados.total_pedidos;
-                }
-            } catch (e) {}
         }
 
         async function carregarCatalogo() {
             try {
                 const res = await fetch('/api/produtos');
                 if (res.ok) catalogo = await res.json();
-            } catch (err) {
+            } catch (e) {
                 catalogo = JSON.parse(localStorage.getItem('produtos_banco_mock')) || [];
             }
-            document.getElementById('kpi-produtos').innerText = catalogo.length;
             renderizarListas();
         }
 
@@ -333,20 +401,29 @@
             renderizarEquipe();
         }
 
-        function popularSelects() {
-            const selectProdMov = document.getElementById('mov-produto');
-            const selectProdVenda = document.getElementById('venda-produto-select');
-            const selectFuncVenda = document.getElementById('venda-funcionario');
+        async function carregarBanners() {
+            try {
+                const res = await fetch('/api/banners');
+                if (res.ok) banners = await res.json();
+            } catch (e) {
+                banners = [];
+            }
+            renderizarBanners();
+        }
 
-            selectProdMov.innerHTML = catalogo.map(p => `<option value="${p.id}">${p.codigo || ''} ${p.nome} (Atual: ${p.estoque || 0})</option>`).join('');
-            selectProdVenda.innerHTML = catalogo.map(p => `<option value="${p.id}">${p.nome} - R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</option>`).join('');
-            selectFuncVenda.innerHTML = equipe.map(f => `<option value="${f.id}">${f.nome} (${f.cargo})</option>`).join('');
+        function popularSelects() {
+            const selProdMov = document.getElementById('mov-produto');
+            const selProdVenda = document.getElementById('venda-produto-select');
+            const selFunc = document.getElementById('venda-funcionario');
+
+            selProdMov.innerHTML = catalogo.map(p => `<option value="${p.id}">${p.codigo || ''} ${p.nome} (Atual: ${p.estoque || 0})</option>`).join('');
+            selProdVenda.innerHTML = catalogo.map(p => `<option value="${p.id}">${p.nome} - R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</option>`).join('');
+            selFunc.innerHTML = equipe.map(f => `<option value="${f.id}">${f.nome} (${f.cargo})</option>`).join('');
         }
 
         function renderizarListas() {
-            // Lista normal
-            const cProdutos = document.getElementById('lista-produtos');
-            cProdutos.innerHTML = catalogo.map(p => `
+            // Produtos no catálogo
+            document.getElementById('lista-produtos').innerHTML = catalogo.map(p => `
                 <div class="item-linha">
                     <div class="item-info">
                         <span class="item-nome"><strong>${p.codigo || ''}</strong> ${p.nome}</span>
@@ -358,16 +435,15 @@
                 </div>
             `).join('');
 
-            // Lista stock
-            const cEstoque = document.getElementById('lista-estoque');
-            cEstoque.innerHTML = catalogo.map(p => {
+            // Estoque atual
+            document.getElementById('lista-estoque').innerHTML = catalogo.map(p => {
                 const qtd = p.estoque || 0;
-                const alerta = qtd <= (p.estoque_minimo || 5) ? '<span class="alerta-estoque">⚠️ Stock Baixo</span>' : '';
+                const alerta = qtd <= (p.estoque_minimo || 5) ? '<span class="alerta-estoque-critico">⚠️ Reposição Urgente</span>' : '';
                 return `
                     <div class="item-linha">
                         <div class="item-info">
                             <span class="item-nome">${p.codigo || ''} ${p.nome}</span>
-                            <span class="item-sub">Disponível em Loja: <strong>${qtd} unidades</strong> ${alerta}</span>
+                            <span class="item-sub">Estoque Físico: <strong>${qtd} un</strong> ${alerta}</span>
                         </div>
                     </div>
                 `;
@@ -375,8 +451,7 @@
         }
 
         function renderizarEquipe() {
-            const c = document.getElementById('lista-equipe');
-            c.innerHTML = equipe.map(f => `
+            document.getElementById('lista-equipe').innerHTML = equipe.map(f => `
                 <div class="item-linha">
                     <div class="item-info">
                         <span class="item-nome">${f.nome}</span>
@@ -386,7 +461,58 @@
             `).join('');
         }
 
-        // Movimentação de Stock (Entrada / Saída)
+        function renderizarBanners() {
+            const container = document.getElementById('lista-banners');
+            if (banners.length === 0) {
+                container.innerHTML = '<div class="estado-vazio">Nenhum banner ativo.</div>';
+                return;
+            }
+            container.innerHTML = banners.map(b => `
+                <div class="card-banner-preview" style="background-image: url('${b.imagem_url}');">
+                    <div class="card-banner-texto">
+                        <h3>${b.titulo}</h3>
+                        <p>${b.subtitulo || ''}</p>
+                    </div>
+                </div>
+                <button class="btn-excluir" onclick="removerBanner(${b.id})" style="margin-bottom: 20px;">Remover Banner</button>
+            `).join('');
+        }
+
+        // Submissão do Banner
+        document.getElementById('form-banner').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                titulo: document.getElementById('banner-titulo').value.trim(),
+                subtitulo: document.getElementById('banner-subtitulo').value.trim(),
+                imagem_url: document.getElementById('banner-imagem').value.trim(),
+                link_destino: document.getElementById('banner-link').value.trim()
+            };
+
+            const res = await fetch('/api/banners', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                emitirFeedback('Banner publicado com sucesso!');
+                e.target.reset();
+                await carregarBanners();
+            } else {
+                emitirFeedback('Erro ao criar banner', 'erro');
+            }
+        });
+
+        async function removerBanner(id) {
+            if (!confirm('Deseja remover este banner?')) return;
+            const res = await fetch(`/api/banners?id=${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                emitirFeedback('Banner removido');
+                await carregarBanners();
+            }
+        }
+
+        // Movimentação de estoque
         document.getElementById('form-movimentacao').addEventListener('submit', async (e) => {
             e.preventDefault();
             const payload = {
@@ -403,24 +529,20 @@
             });
 
             if (res.ok) {
-                emitirFeedback('Stock atualizado com sucesso!');
+                emitirFeedback('Movimentação guardada com sucesso!');
                 e.target.reset();
                 await carregarCatalogo();
                 popularSelects();
-            } else {
-                emitirFeedback('Erro ao atualizar stock', 'erro');
             }
         });
 
-        // Montar Venda Balcão
+        // Vendas Balcão
         function adicionarItemVenda() {
             const pId = parseInt(document.getElementById('venda-produto-select').value, 10);
             const qtd = parseInt(document.getElementById('venda-qtd').value, 10);
             const prod = catalogo.find(p => p.id === pId);
-
             if (!prod || qtd <= 0) return;
             itensVendaAtual.push({ id: prod.id, nome: prod.nome, preco: parseFloat(prod.preco), qtd });
-
             atualizarCarrinhoVenda();
         }
 
@@ -458,19 +580,52 @@
             });
 
             if (res.ok) {
-                emitirFeedback('Venda concluída e stock baixado!');
+                emitirFeedback('Venda concluída com sucesso!');
                 itensVendaAtual = [];
                 atualizarCarrinhoVenda();
                 e.target.reset();
                 await carregarCatalogo();
-                await carregarMetricas();
                 popularSelects();
-            } else {
-                emitirFeedback('Erro ao registar venda', 'erro');
             }
         });
 
-        // Cadastro de Funcionário
+        // Cadastro de Produto
+        document.getElementById('form-cadastro').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                codigo: document.getElementById('codigo').value.trim() || undefined,
+                nome: document.getElementById('nome').value.trim(),
+                categoria: document.getElementById('categoria').value,
+                preco: parseFloat(document.getElementById('preco').value),
+                imagem_url: document.getElementById('imagem_url').value.trim(),
+                descricao: document.getElementById('descricao').value.trim()
+            };
+
+            const res = await fetch('/api/produtos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                emitirFeedback('Produto adicionado ao catálogo!');
+                e.target.reset();
+                await carregarCatalogo();
+                popularSelects();
+            }
+        });
+
+        async function removerItem(id) {
+            if (!confirm('Deseja excluir este item?')) return;
+            const res = await fetch(`/api/produtos?id=${id}`, { method: 'DELETE' });
+            if (res.ok) {
+                emitirFeedback('Item excluído com sucesso');
+                await carregarCatalogo();
+                popularSelects();
+            }
+        }
+
+        // Cadastro de Equipe
         document.getElementById('form-equipe').addEventListener('submit', async (e) => {
             e.preventDefault();
             const payload = {
@@ -484,14 +639,100 @@
                 body: JSON.stringify(payload)
             });
             if (res.ok) {
-                emitirFeedback('Membro de equipa cadastrado!');
+                emitirFeedback('Colaborador cadastrado!');
                 e.target.reset();
                 await carregarEquipe();
                 popularSelects();
             }
         });
 
-        document.addEventListener('DOMContentLoaded', inicializarDados);
+        // QR Code e Impressão
+        function gerarQRCodeMesa() {
+            const num = document.getElementById('num-mesa').value.padStart(2, '0');
+            const baseUrl = document.getElementById('url-base-qr').value.trim();
+            const urlFinal = `${baseUrl}?mesa=${num}`;
+
+            document.getElementById('resultado-qr').style.display = 'block';
+            const qrContainer = document.getElementById('qrcode-preview');
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+                text: urlFinal,
+                width: 180,
+                height: 180,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        function imprimirAdesivoMesa() {
+            const num = document.getElementById('num-mesa').value.padStart(2, '0');
+            const qrImg = document.querySelector('#qrcode-preview img').src;
+            const janela = window.open('', '_blank');
+            janela.document.write(`
+                <html>
+                <body style="font-family:sans-serif; text-align:center; padding:40px;">
+                    <div style="border:2px dashed #333; padding:30px; display:inline-block; border-radius:16px;">
+                        <h1 style="margin:0;">FRUTOS DE GOIÁS</h1>
+                        <h2 style="color:#00AA44; margin:10px 0 20px;">MESA ${num}</h2>
+                        <img src="${qrImg}" width="220" />
+                        <p style="font-size:14px; color:#555; margin-top:15px;">Aponte a câmara para abrir o cardápio e pedir</p>
+                    </div>
+                    <script>window.onload = function() { window.print(); window.close(); }<\/script>
+                </body>
+                </html>
+            `);
+        }
+
+        function abrirCardapioImpressao() {
+            const categorias = {
+                'picoles': 'Picolés Artesanais',
+                'gelados': 'Taças & Gelados',
+                'acai': 'Açaí Natural',
+                'especiais': 'Especiais da Casa'
+            };
+
+            let conteudoHTML = '';
+            for (const [slug, nomeCat] of Object.entries(categorias)) {
+                const itens = catalogo.filter(p => p.categoria === slug && p.disponivel !== false);
+                if (itens.length === 0) continue;
+
+                conteudoHTML += `<div style="break-inside:avoid; margin-bottom:25px;"><h3 style="font-family:'Playfair Display',serif; font-size:18px; border-bottom:1px solid #ddd; padding-bottom:4px; color:#008833;">${nomeCat}</h3>`;
+                itens.forEach(item => {
+                    const cod = item.codigo || `#${String(item.id).padStart(2, '0')}`;
+                    const preco = parseFloat(item.preco).toFixed(2).replace('.', ',');
+                    conteudoHTML += `
+                        <div style="display:flex; align-items:baseline; margin-bottom:10px;">
+                            <span style="font-weight:700; color:#008833; font-size:13px; font-family:monospace; margin-right:8px;">${cod}</span>
+                            <span style="font-weight:600; font-size:13px;">${item.nome}</span>
+                            <span style="flex-grow:1; border-bottom:1px dotted #aaa; margin:0 8px;"></span>
+                            <span style="font-weight:700; font-size:13px;">R$ ${preco}</span>
+                        </div>
+                    `;
+                });
+                conteudoHTML += `</div>`;
+            }
+
+            const janela = window.open('', '_blank');
+            janela.document.write(`
+                <html>
+                <head>
+                    <title>Cardápio Impresso - Frutos de Goiás</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+                </head>
+                <body style="font-family:'Plus Jakarta Sans',sans-serif; color:#111; padding:20px;">
+                    <div style="text-align:center; border-bottom:2px solid #111; padding-bottom:15px; margin-bottom:20px;">
+                        <h1 style="font-family:'Playfair Display',serif; font-size:30px; margin:0;">FRUTOS DE GOIÁS</h1>
+                        <p style="margin:5px 0 0; font-size:13px; color:#555;">CARDÁPIO ARTESANAL</p>
+                    </div>
+                    <div style="column-count:2; column-gap:30px;">${conteudoHTML}</div>
+                    <script>window.onload = function() { window.print(); }<\/script>
+                </body>
+                </html>
+            `);
+        }
+
+        document.addEventListener('DOMContentLoaded', inicializarPainel);
     </script>
 </body>
 </html>

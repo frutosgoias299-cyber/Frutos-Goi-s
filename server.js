@@ -227,3 +227,52 @@ app.post('/api/estoque/movimentacao', async (req, res) => {
         client.release();
     }
 });
+// ================= CONTROLO DE BANNERS =================
+app.get('/api/banners', async (req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT * FROM banners ORDER BY id DESC');
+        res.json(rows);
+    } catch (err) {
+        console.error('Erro ao consultar banners:', err);
+        res.status(500).json({ erro: 'Falha ao buscar banners' });
+    }
+});
+
+app.post('/api/banners', async (req, res) => {
+    const { titulo, subtitulo, imagem_url, link_destino } = req.body;
+    if (!titulo || !imagem_url) {
+        return res.status(400).json({ erro: 'Título e URL da imagem são obrigatórios.' });
+    }
+    try {
+        const query = `
+            INSERT INTO banners (titulo, subtitulo, imagem_url, link_destino, ativo)
+            VALUES ($1, $2, $3, $4, true)
+            RETURNING *;
+        `;
+        const { rows } = await pool.query(query, [titulo, subtitulo || '', imagem_url, link_destino || '']);
+        res.status(201).json(rows[0]);
+    } catch (err) {
+        console.error('Erro ao salvar banner:', err);
+        res.status(500).json({ erro: 'Falha ao guardar banner' });
+    }
+});
+
+app.patch('/api/banners', async (req, res) => {
+    const { id, ativo } = req.body;
+    try {
+        const { rows } = await pool.query('UPDATE banners SET ativo = $1 WHERE id = $2 RETURNING *;', [ativo, id]);
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ erro: 'Falha ao atualizar banner' });
+    }
+});
+
+app.delete('/api/banners', async (req, res) => {
+    const { id } = req.query;
+    try {
+        await pool.query('DELETE FROM banners WHERE id = $1', [id]);
+        res.json({ mensagem: 'Banner removido com sucesso' });
+    } catch (err) {
+        res.status(500).json({ erro: 'Falha ao remover banner' });
+    }
+});
