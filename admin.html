@@ -79,6 +79,11 @@
             opacity: 0.9;
         }
 
+        .btn-salvar:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .tabela-produtos {
             width: 100%;
             border-collapse: collapse;
@@ -124,6 +129,24 @@
             font-size: 1rem;
             padding: 4px;
         }
+
+        .msg-alerta {
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .msg-sucesso {
+            background: rgba(0, 255, 102, 0.15);
+            color: #00FF66;
+            border: 1px solid rgba(0, 255, 102, 0.3);
+        }
+        .msg-erro {
+            background: rgba(255, 68, 68, 0.15);
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -139,6 +162,8 @@
 
     <main class="admin-layout">
         
+        <div id="alerta-status" class="msg-alerta"></div>
+
         <!-- Formulário de Cadastro -->
         <section class="card-painel">
             <h2 class="titulo-seccao" style="margin-bottom: 16px;">Adicionar Novo Produto</h2>
@@ -170,10 +195,10 @@
 
                 <div class="campo-grupo campo-full">
                     <label for="descricao">Descrição / Ingredientes</label>
-                    <textarea id="descricao" rows="2" placeholder="Ex: Feito com chocolate nobre e fruta fresca..."></textarea>
+                    <textarea id="descricao" rows="2" placeholder="Ex: Feito com fruta fresca e ingredientes selecionados..."></textarea>
                 </div>
 
-                <button type="submit" class="btn-salvar">Cadastrar Produto</button>
+                <button type="submit" id="btn-submit-salvar" class="btn-salvar">Cadastrar Produto</button>
             </form>
         </section>
 
@@ -192,7 +217,9 @@
                         </tr>
                     </thead>
                     <tbody id="lista-admin-produtos">
-                        <!-- Injetado dinamicamente -->
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #888;">Carregando produtos...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -201,67 +228,156 @@
     </main>
 
     <script>
-        // Carregamento e integração local/mock até plugar na API final
-        let catalogo = JSON.parse(localStorage.getItem('produtos_banco_mock')) || [
-            { id: 1, nome: "Picolé de Kiwi", categoria: "picoles", preco: 6.00, descricao: "100% fruta natural", status: true },
-            { id: 2, nome: "Gelado Morango", categoria: "gelados", preco: 14.00, descricao: "Copo artesanal 300ml", status: true },
-            { id: 3, nome: "Açaí Tradicional", categoria: "acai", preco: 22.00, descricao: "Tigela 500ml + granola", status: true }
-        ];
+        let catalogo = [];
 
-        function renderizarListaAdmin() {
+        function mostrarMensagem(texto, tipo = 'sucesso') {
+            const alerta = document.getElementById('alerta-status');
+            alerta.innerText = texto;
+            alerta.className = `msg-alerta ${tipo === 'sucesso' ? 'msg-sucesso' : 'msg-erro'}`;
+            alerta.style.display = 'block';
+            setTimeout(() => {
+                alerta.style.display = 'none';
+            }, 4000);
+        }
+
+        // 1. Carregar Produtos (GET /api/produtos)
+        async function carregarProdutos() {
+            try {
+                const response = await fetch('/api/produtos');
+                if (!response.ok) throw new Error('Falha ao consultar API');
+                catalogo = await response.json();
+            } catch (error) {
+                console.warn('API não disponível, usando fallback local:', error);
+                catalogo = JSON.parse(localStorage.getItem('produtos_banco_mock')) || [
+                    { id: 1, nome: "Picolé de Kiwi", categoria: "picoles", preco: 6.00, descricao: "100% fruta natural", disponivel: true },
+                    { id: 2, nome: "Gelado Morango", categoria: "gelados", preco: 14.00, descricao: "Copo artesanal 300ml", disponivel: true },
+                    { id: 3, nome: "Açaí Tradicional", categoria: "acai", preco: 22.00, descricao: "Tigela 500ml + granola", disponivel: true }
+                ];
+            }
+            renderizarTabela();
+        }
+
+        // 2. Renderizar Tabela
+        function renderizarTabela() {
             const tbody = document.getElementById('lista-admin-produtos');
             tbody.innerHTML = '';
 
-            catalogo.forEach((p, index) => {
+            if (catalogo.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #888;">Nenhum produto cadastrado.</td></tr>';
+                return;
+            }
+
+            catalogo.forEach((p) => {
                 const tr = document.createElement('tr');
+                const estaAtivo = p.disponivel !== false;
+
                 tr.innerHTML = `
                     <td><strong>${p.nome}</strong></td>
                     <td>${p.categoria}</td>
                     <td>R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</td>
-                    <td><span class="badge-status ${p.status ? 'status-ativo' : 'status-inativo'}">${p.status ? 'Ativo' : 'Esgotado'}</span></td>
                     <td>
-                        <button class="btn-acao" onclick="alternarStatus(${index})" title="Alternar Status">🔄</button>
-                        <button class="btn-acao" onclick="removerProduto(${index})" title="Excluir">🗑️</button>
+                        <span class="badge-status ${estaAtivo ? 'status-ativo' : 'status-inativo'}">
+                            ${estaAtivo ? 'Ativo' : 'Esgotado'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn-acao" onclick="alternarStatus(${p.id}, ${estaAtivo})" title="Alternar Disponibilidade">🔄</button>
+                        <button class="btn-acao" onclick="removerProduto(${p.id})" title="Excluir">🗑️</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        document.getElementById('form-produto').addEventListener('submit', (e) => {
+        // 3. Cadastrar Produto (POST /api/produtos)
+        document.getElementById('form-produto').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const novoProduto = {
-                id: Date.now(),
-                nome: document.getElementById('nome').value,
+            const btn = document.getElementById('btn-submit-salvar');
+            btn.disabled = true;
+            btn.innerText = 'Salvando...';
+
+            const payload = {
+                nome: document.getElementById('nome').value.trim(),
                 categoria: document.getElementById('categoria').value,
                 preco: parseFloat(document.getElementById('preco').value),
-                imagem_url: document.getElementById('imagem_url').value,
-                descricao: document.getElementById('descricao').value,
-                status: true
+                imagem_url: document.getElementById('imagem_url').value.trim(),
+                descricao: document.getElementById('descricao').value.trim()
             };
 
-            catalogo.push(novoProduto);
-            localStorage.setItem('produtos_banco_mock', JSON.stringify(catalogo));
-            renderizarListaAdmin();
-            e.target.reset();
-            alert("Produto cadastrado com sucesso!");
+            try {
+                const response = await fetch('/api/produtos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error('Erro ao salvar no banco');
+                
+                const itemCriado = await response.json();
+                catalogo.push(itemCriado);
+                mostrarMensagem('Produto cadastrado no banco com sucesso!');
+            } catch (err) {
+                console.warn('Salvando localmente devido ao erro na API:', err);
+                const itemMock = { ...payload, id: Date.now(), disponivel: true };
+                catalogo.push(itemMock);
+                localStorage.setItem('produtos_banco_mock', JSON.stringify(catalogo));
+                mostrarMensagem('Produto cadastrado localmente!', 'sucesso');
+            } finally {
+                renderizarTabela();
+                e.target.reset();
+                btn.disabled = false;
+                btn.innerText = 'Cadastrar Produto';
+            }
         });
 
-        function alternarStatus(index) {
-            catalogo[index].status = !catalogo[index].status;
-            localStorage.setItem('produtos_banco_mock', JSON.stringify(catalogo));
-            renderizarListaAdmin();
-        }
+        // 4. Alternar Status (PATCH /api/produtos)
+        async function alternarStatus(id, statusAtual) {
+            const novoStatus = !statusAtual;
 
-        function removerProduto(index) {
-            if (confirm("Remover este produto do catálogo?")) {
-                catalogo.splice(index, 1);
+            try {
+                const response = await fetch('/api/produtos', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, disponivel: novoStatus })
+                });
+
+                if (!response.ok) throw new Error('Falha ao atualizar status');
+                
+                const index = catalogo.findIndex(item => item.id === id);
+                if (index !== -1) catalogo[index].disponivel = novoStatus;
+            } catch (err) {
+                console.warn('Atualizando status localmente:', err);
+                const index = catalogo.findIndex(item => item.id === id);
+                if (index !== -1) catalogo[index].disponivel = novoStatus;
                 localStorage.setItem('produtos_banco_mock', JSON.stringify(catalogo));
-                renderizarListaAdmin();
             }
+
+            renderizarTabela();
         }
 
-        document.addEventListener('DOMContentLoaded', renderizarListaAdmin);
+        // 5. Remover Produto (DELETE /api/produtos?id=X)
+        async function removerProduto(id) {
+            if (!confirm('Deseja realmente remover este produto?')) return;
+
+            try {
+                const response = await fetch(`/api/produtos?id=${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Falha ao excluir produto');
+                catalogo = catalogo.filter(item => item.id !== id);
+                mostrarMensagem('Produto removido com sucesso!');
+            } catch (err) {
+                console.warn('Removendo localmente:', err);
+                catalogo = catalogo.filter(item => item.id !== id);
+                localStorage.setItem('produtos_banco_mock', JSON.stringify(catalogo));
+                mostrarMensagem('Produto removido localmente!', 'sucesso');
+            }
+
+            renderizarTabela();
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarProdutos);
     </script>
 </body>
 </html>
