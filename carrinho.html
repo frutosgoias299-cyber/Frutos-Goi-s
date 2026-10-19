@@ -4,11 +4,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frutos de Goiás | Meu Carrinho</title>
+    <title>Frutos de Goiás | Carrinho de Compras</title>
     <!-- Fontes do Google -->
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Liga ao CSS do Cardápio/App -->
+    <!-- Liga ao CSS do Cardápio -->
     <link rel="stylesheet" href="css/app.css?v=2">
+    <style>
+        /* Estilos específicos para a página do carrinho */
+        .carrinho-container {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            padding-bottom: 100px; /* Espaço para a barra inferior */
+        }
+        
+        .lista-itens {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .item-carrinho {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-detalhes h4 {
+            color: #FFF;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .item-detalhes p {
+            color: var(--cor-verde);
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .btn-remover {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-remover:hover {
+            background: rgba(255, 68, 68, 0.4);
+        }
+
+        .carrinho-vazio {
+            text-align: center;
+            color: #aaa;
+            margin-top: 50px;
+            font-size: 1.1rem;
+        }
+
+        .resumo-caixa {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .resumo-linha {
+            display: flex;
+            justify-content: space-between;
+            color: #FFF;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .resumo-linha.total {
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+            color: var(--cor-verde);
+        }
+
+        .btn-whatsapp {
+            display: block;
+            width: 100%;
+            background-color: #25D366;
+            color: #FFF;
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            transition: background 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #20ba5a;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,38 +121,35 @@
     <!-- CABEÇALHO PREMIUM -->
     <header class="app-header">
         <div class="logo-container">
-            <h1 class="logo-texto">MEU CARRINHO</h1>
+            <h1 class="logo-texto">SEU CARRINHO</h1>
+        </div>
+        <div class="badge-delivery">
+            <span>🛒 Pedido</span>
         </div>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL DO CARRINHO -->
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="app-conteudo">
-        
-        <!-- Estado Vazio (ou lista de produtos adicionados dinamicamente) -->
-        <div id="carrinho-vazio" class="carrinho-vazio-container">
-            <div class="icone-vazio">🛒</div>
-            <p class="texto-vazio">O teu carrinho está vazio.</p>
-            <a href="app.html" class="btn-explorar-cardapio">Ver Cardápio</a>
-        </div>
-
-        <!-- Secção de Resumo (Aparece quando houver itens) -->
-        <div id="carrinho-conteudo" style="display: none;">
-            <div class="lista-itens-carrinho" id="lista-carrinho">
-                <!-- Os produtos adicionados entram aqui via JavaScript futuramente -->
+        <div class="carrinho-container">
+            
+            <!-- Lista dinâmica de produtos -->
+            <div id="lista-carrinho" class="lista-itens">
+                <!-- Os itens serão injetados aqui via JavaScript -->
             </div>
 
-            <div class="caixa-resumo">
-                <div class="linha-total">
+            <!-- Caixa de Resumo e Checkout -->
+            <div id="caixa-resumo" class="resumo-caixa" style="display: none;">
+                <div class="resumo-linha total">
                     <span>Total:</span>
-                    <span id="preco-total" class="verde">R$ 0,00</span>
+                    <span id="preco-total">R$ 0,00</span>
                 </div>
-                <button class="botao-neon btn-finalizar" onclick="finalizarPedidoWhatsApp()">FINALIZAR PEDIDO</button>
+                <button id="btn-finalizar" class="btn-whatsapp">Finalizar Pedido via WhatsApp 🚀</button>
             </div>
-        </div>
 
+        </div>
     </main>
 
-    <!-- BARRA DE NAVEGAÇÃO INFERIOR -->
+    <!-- BARRA DE NAVEGAÇÃO INFERIOR ESTILO APP NATIVA -->
     <nav class="bottom-bar">
         <a href="app.html" class="nav-item">
             <span class="icone">🏠</span>
@@ -61,143 +163,93 @@
             <span class="icone">📷</span>
             <span>Ler QR</span>
         </a>
-        <a href="carrinho.html" class="nav-item" style="position: relative;">
+        <a href="carrinho.html" class="nav-item ativo" style="position: relative;">
             <span class="icone">🛒</span>
             <span>Carrinho</span>
-            <!-- Contador que começa oculto e só aparece se houver itens -->
             <span id="contador-carrinho" style="display: none; position: absolute; top: 2px; right: 18px; background-color: #ff4444; color: #FFF; font-size: 0.65rem; font-weight: bold; padding: 2px 5px; border-radius: 50px; min-width: 14px; text-align: center;">0</span>
         </a>
     </nav>
 
-    <!-- Estilos específicos para o Carrinho integrados -->
-    <style>
-        .carrinho-vazio-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 80px 20px;
-            text-align: center;
-        }
-        .icone-vazio {
-            font-size: 4rem;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-        .texto-vazio {
-            font-size: 1rem;
-            color: var(--cor-texto-sec);
-            margin-bottom: 25px;
-        }
-        .btn-explorar-cardapio {
-            background-color: var(--cor-verde);
-            color: #000;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 700;
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 15px rgba(0, 255, 102, 0.3);
-        }
-        .caixa-resumo {
-            margin-top: 30px;
-            background-color: var(--cor-card);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 16px;
-        }
-        .linha-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.3rem;
-            font-family: 'Anton', sans-serif;
-            margin-bottom: 20px;
-        }
-        .btn-finalizar {
-            width: 100%;
-            text-align: center;
-            box-sizing: border-box;
-            display: block;
-        }
-    </style>
-
-   <!-- Script completo para gerir e exibir o Carrinho -->
+    <!-- Script de Gestão do Carrinho -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            carregarCarrinho();
-        });
-
         function carregarCarrinho() {
-            const carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
-            const containerVazio = document.getElementById('carrinho-vazio');
-            const containerConteudo = document.getElementById('carrinho-conteudo');
-            const listaCarrinho = document.getElementById('lista-carrinho');
+            const listaElem = document.getElementById('lista-carrinho');
+            const resumoElem = document.getElementById('caixa-resumo');
             const precoTotalElem = document.getElementById('preco-total');
+            const contadorElem = document.getElementById('contador-carrinho');
+            
+            let carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
 
-            if (carrinho.length === 0) {
-                containerVazio.style.display = 'flex';
-                containerConteudo.style.display = 'none';
+            // Atualiza contador da barra inferior
+            if (carrinho.length > 0) {
+                contadorElem.style.display = 'inline-block';
+                contadorElem.innerText = carrinho.length;
+                resumoElem.style.display = 'block';
+            } else {
+                contadorElem.style.display = 'none';
+                resumoElem.style.display = 'none';
+                listaElem.innerHTML = `<div class="carrinho-vazio">O seu carrinho está vazio. 🍦<br><br><a href="app.html" style="color: var(--cor-verde); text-decoration: underline;">Voltar ao Cardápio</a></div>`;
                 return;
             }
 
-            // Mostra o conteúdo e esconde o estado vazio
-            containerVazio.style.display = 'none';
-            containerConteudo.style.display = 'block';
+            // Renderiza os produtos
+            let html = '';
+            let totalGeral = 0;
 
-            listaCarrinho.innerHTML = '';
-            let total = 0;
+            carrinho.forEach((produto, index) => {
+                // Converte o preço string "R$ 6,00" para número (6.00)
+                let precoNumerico = parseFloat(produto.preco.replace('R$', '').replace(',', '.').trim()) || 0;
+                totalGeral += precoNumerico;
 
-            carrinho.forEach((item, index) => {
-                // Converte o preço string (ex: "R$ 6,00") para número float (6.00)
-                let precoNumerico = parseFloat(item.preco.replace('R$', '').replace(',', '.').trim()) || 0;
-                total += precoNumerico;
-
-                const itemDiv = document.createElement('div');
-                itemDiv.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 12px 16px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05);";
-                
-                itemDiv.innerHTML = `
-                    <div>
-                        <h4 style="margin: 0; font-size: 0.95rem; color: #FFF;">${item.titulo}</h4>
-                        <span style="font-size: 0.85rem; color: var(--cor-verde);">${item.preco}</span>
+                html += `
+                    <div class="item-carrinho">
+                        <div class="item-detalhes">
+                            <h4>${produto.titulo}</h4>
+                            <p>${produto.preco}</p>
+                        </div>
+                        <button class="btn-remover" onclick="removerItem(${index})">Remover</button>
                     </div>
-                    <button onclick="removerItem(${index})" style="background: none; border: none; color: #ff4444; font-size: 1.1rem; cursor: pointer;">🗑️</button>
                 `;
-                listaCarrinho.appendChild(itemDiv);
             });
 
-            precoTotalElem.innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+            listaElem.innerHTML = html;
+            precoTotalElem.innerText = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
         }
 
         function removerItem(index) {
             let carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
             carrinho.splice(index, 1);
             localStorage.setItem('carrinho_frutos', JSON.stringify(carrinho));
-            carregarCarrinho(); // Atualiza a tela
+            carregarCarrinho();
         }
 
-        function finalizarPedidoWhatsApp() {
-            const carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
+        // Finalizar pedido enviando para o WhatsApp
+        document.getElementById('btn-finalizar').addEventListener('click', () => {
+            let carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
             if (carrinho.length === 0) return;
 
-            let mensagem = "Olá! Gostaria de fazer o seguinte pedido:%0A";
-            let total = 0;
+            let mensagem = "Olá! Gostaria de fazer o seguinte pedido:%0A%0A";
+            let totalGeral = 0;
 
-            carrinho.forEach(item => {
+            carrinho.forEach((item) => {
                 mensagem += `- ${item.titulo} (${item.preco})%0A`;
                 let precoNum = parseFloat(item.preco.replace('R$', '').replace(',', '.').trim()) || 0;
-                total += precoNum;
+                totalGeral += precoNum;
             });
 
-            mensagem += `%0A*Total:* R$ ${total.toFixed(2).replace('.', ',')}`;
+            mensagem += `%0A*Total: R$ ${totalGeral.toFixed(2).replace('.', ',')}*`;
 
-            // Substitui pelo número de WhatsApp real do estabelecimento (ex: 5561999999999)
-            const numeroWhatsApp = "5500999999999"; 
+            // Substitui pelo número de WhatsApp do estabelecimento (exemplo)
+            const numeroWhatsApp = "5589999999999"; 
             const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensagem}`;
 
             window.open(urlWhatsApp, '_blank');
-        }
+        });
+
+        // Executa ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarCarrinho();
+        });
     </script>
 </body>
 
