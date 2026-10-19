@@ -18,12 +18,15 @@ const pool = new Pool({
 });
 
 app.use(cors());
-app.use(express.json());
+
+// Aumenta o limite para aceitar imagens em Base64 comprimidas (até 15MB)
+app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ limit: '15mb', extended: true }));
 
 // Servir os ficheiros estáticos (HTML, CSS, imagens)
 app.use(express.static('.'));
 
-// 1. LISTAR PRODUTOS (GET /api/produtos)
+// ================= 1. CONTROLO DE PRODUTOS =================
 app.get('/api/produtos', async (req, res) => {
     try {
         const { rows } = await pool.query('SELECT * FROM produtos ORDER BY id ASC');
@@ -34,7 +37,6 @@ app.get('/api/produtos', async (req, res) => {
     }
 });
 
-// 2. CRIAR PRODUTO COM CÓDIGO (POST /api/produtos)
 app.post('/api/produtos', async (req, res) => {
     const { nome, categoria, preco, imagem_url, descricao, codigo } = req.body;
 
@@ -43,7 +45,6 @@ app.post('/api/produtos', async (req, res) => {
     }
 
     try {
-        // Se o código não for informado manualmente, gera automático com base no ID
         const query = `
             INSERT INTO produtos (nome, categoria, preco, imagem_url, descricao, codigo, disponivel)
             VALUES (
@@ -66,7 +67,6 @@ app.post('/api/produtos', async (req, res) => {
     }
 });
 
-// 3. ATUALIZAR DISPONIBILIDADE (PATCH /api/produtos)
 app.patch('/api/produtos', async (req, res) => {
     const { id, disponivel } = req.body;
 
@@ -89,7 +89,6 @@ app.patch('/api/produtos', async (req, res) => {
     }
 });
 
-// 4. ELIMINAR PRODUTO (DELETE /api/produtos)
 app.delete('/api/produtos', async (req, res) => {
     const { id } = req.query;
 
@@ -106,10 +105,7 @@ app.delete('/api/produtos', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor a correr em http://localhost:${PORT}`);
-});
-// ================= CONTROLO DE EQUIPA =================
+// ================= 2. CONTROLO DE EQUIPA =================
 app.get('/api/funcionarios', async (req, res) => {
     try {
         const { rows } = await pool.query('SELECT id, nome, cargo, ativo FROM funcionarios ORDER BY nome ASC');
@@ -132,7 +128,7 @@ app.post('/api/funcionarios', async (req, res) => {
     }
 });
 
-// ================= CONTROLO DE VENDAS =================
+// ================= 3. CONTROLO DE VENDAS =================
 app.get('/api/vendas/resumo-hoje', async (req, res) => {
     try {
         const { rows } = await pool.query(`
@@ -155,7 +151,6 @@ app.post('/api/vendas', async (req, res) => {
     try {
         await client.query('BEGIN');
 
-        // 1. Gravar Venda
         const queryVenda = `
             INSERT INTO vendas (funcionario_id, mesa, forma_pagamento, itens_json, valor_total)
             VALUES ($1, $2, $3, $4, $5) RETURNING id;
@@ -168,7 +163,6 @@ app.post('/api/vendas', async (req, res) => {
             valor_total
         ]);
 
-        // 2. Dar baixa automática de stock para cada item vendido
         for (const item of itens) {
             await client.query(`
                 UPDATE produtos 
@@ -193,7 +187,7 @@ app.post('/api/vendas', async (req, res) => {
     }
 });
 
-// ================= MOVIMENTAÇÃO DE STOCK (ENTRADA / SAÍDA) =================
+// ================= 4. MOVIMENTAÇÃO DE STOCK =================
 app.post('/api/estoque/movimentacao', async (req, res) => {
     const { produto_id, funcionario_id, tipo, quantidade, motivo } = req.body;
     const qtd = parseInt(quantidade, 10);
@@ -227,7 +221,8 @@ app.post('/api/estoque/movimentacao', async (req, res) => {
         client.release();
     }
 });
-// ================= CONTROLO DE BANNERS =================
+
+// ================= 5. CONTROLO DE BANNERS =================
 app.get('/api/banners', async (req, res) => {
     try {
         const { rows } = await pool.query('SELECT * FROM banners ORDER BY id DESC');
@@ -275,4 +270,9 @@ app.delete('/api/banners', async (req, res) => {
     } catch (err) {
         res.status(500).json({ erro: 'Falha ao remover banner' });
     }
+});
+
+// Inicialização única do servidor na porta configurada
+app.listen(PORT, () => {
+    console.log(`Servidor a correr em http://localhost:${PORT}`);
 });
