@@ -88,6 +88,16 @@ async function carregarTudo() {
     atualizarInterface();
 }
 
+function alternarStatusProduto(id) {
+    const prod = produtos.find(p => p.id === id);
+    if (!prod) return;
+
+    prod.disponivel = prod.disponivel === false ? true : false;
+    localStorage.setItem('produtos_banco_mock', JSON.stringify(produtos));
+    avisar(prod.disponivel ? 'Produto visível no cardápio!' : 'Produto pausado do cardápio!');
+    atualizarInterface();
+}
+
 function atualizarInterface() {
     // Preenchimento dos Menus de Seleção
     const selMov = document.getElementById('mov-produto');
@@ -107,7 +117,7 @@ function atualizarInterface() {
         selFunc.innerHTML = equipe.map(f => `<option value="${f.id}">${f.nome} (${f.cargo})</option>`).join('');
     }
 
-    renderizarListaProdutos(produtos, excluirProduto);
+    renderizarListaProdutos(produtos, excluirProduto, alternarStatusProduto);
     renderizarEstoque(produtos);
     renderizarBanners(banners, excluirBanner);
     renderizarEquipe(equipe);
