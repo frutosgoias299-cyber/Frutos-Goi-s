@@ -3,59 +3,43 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Frutos de Goiás | Menu & Delivery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frutos de Goiás | Cardápio Digital</title>
     <!-- Fontes do Google -->
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;700&display=swap"
-        rel="stylesheet">
-    <!-- Liga ao teu CSS da App -->
-    <link rel="stylesheet" href="css/app.css?v=4">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Liga ao CSS do Cardápio (atualizado para v=2 para limpar cache) -->
+    <link rel="stylesheet" href="css/app.css?v=2">
 </head>
 
 <body>
 
-    <!-- TELA DE ABERTURA (SPLASH SCREEN) COM O TEU VÍDEO -->
-    <div id="splash-screen">
-        <video id="video-abertura" autoplay muted playsinline>
-            <source src="crc/abertura.mp4" type="video/mp4">
-        </video>
-        <button id="pular-abertura">PULAR</button>
-    </div>
-
-    <!-- Cabeçalho da App -->
+    <!-- CABEÇALHO PREMIUM -->
     <header class="app-header">
         <div class="logo-container">
-            <svg class="logo-svg" width="24" height="30" viewBox="0 0 24 32" fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M4 14L6 30H18L20 14H4Z" fill="#00FF66" stroke="#00FF66" stroke-width="2"
-                    stroke-linejoin="round" />
-                <path d="M4 14C4 9 7.58172 5 12 5C16.4183 5 20 9 20 14" fill="#FFFFFF" />
-                <path d="M12 5C12 2 14 2 14 2C14 2 15 4 12 5Z" fill="#00FF66" />
-            </svg>
-            <span class="logo-texto">FRUTOS DE GOIÁS</span>
+            <h1 class="logo-texto">FRUTOS DE GOIÁS</h1>
         </div>
-        <div class="tipo-pedido">
-            <span class="badge-delivery">Delivery</span>
+        <div class="badge-delivery">
+            <span>🚀 Delivery</span>
         </div>
     </header>
 
-    <!-- Área principal com o Catálogo -->
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="app-conteudo">
-
-        <!-- Filtro de Categorias (Scroll Horizontal) -->
+        
+        <!-- Barra de Categorias Horizontal -->
         <div class="categorias-scroll">
             <button class="categoria-btn ativo">Todos</button>
             <button class="categoria-btn">Picolés</button>
             <button class="categoria-btn">Gelados</button>
             <button class="categoria-btn">Açaí</button>
-            <button class="categoria-btn">Bebidas</button>
+            <button class="categoria-btn">Especiais</button>
         </div>
 
         <h2 class="titulo-seccao">Destaques</h2>
 
-        <!-- Grelha de Produtos (2 Colunas no Telemóvel) -->
+        <!-- GRELHA DE PRODUTOS PREMIUM -->
         <div class="grelha-produtos">
-
+            
             <!-- Produto 1 -->
             <div class="produto-card">
                 <div class="produto-imagem">
@@ -66,7 +50,7 @@
                     <p class="produto-desc">100% fruta natural</p>
                     <div class="produto-rodape">
                         <span class="produto-preco">R$ 6,00</span>
-                        <button class="btn-adicionar">+</button>
+                        <button class="btn-adicionar" title="Adicionar">+</button>
                     </div>
                 </div>
             </div>
@@ -81,7 +65,7 @@
                     <p class="produto-desc">Copo artesanal 300ml</p>
                     <div class="produto-rodape">
                         <span class="produto-preco">R$ 14,00</span>
-                        <button class="btn-adicionar">+</button>
+                        <button class="btn-adicionar" title="Adicionar">+</button>
                     </div>
                 </div>
             </div>
@@ -96,7 +80,7 @@
                     <p class="produto-desc">Tigela 500ml + granola</p>
                     <div class="produto-rodape">
                         <span class="produto-preco">R$ 22,00</span>
-                        <button class="btn-adicionar">+</button>
+                        <button class="btn-adicionar" title="Adicionar">+</button>
                     </div>
                 </div>
             </div>
@@ -111,7 +95,7 @@
                     <p class="produto-desc">Sem adição de açúcares</p>
                     <div class="produto-rodape">
                         <span class="produto-preco">R$ 6,00</span>
-                        <button class="btn-adicionar">+</button>
+                        <button class="btn-adicionar" title="Adicionar">+</button>
                     </div>
                 </div>
             </div>
@@ -119,56 +103,26 @@
         </div>
     </main>
 
-    <!-- BARRA DE NAVEGAÇÃO INFERIOR ATUALIZADA -->
+    <!-- BARRA DE NAVEGAÇÃO INFERIOR ESTILO APP NATIVA -->
     <nav class="bottom-bar">
-        <a href="index.html" class="nav-item">
+        <a href="app.html" class="nav-item ativo">
             <span class="icone">🏠</span>
             <span>Início</span>
         </a>
-        <a href="app.html" class="nav-item ativo">
-            <span class="icone">🍦</span>
+        <a href="#" class="nav-item">
+            <span class="icone">📜</span>
             <span>Cardápio</span>
         </a>
         <a href="leitor.html" class="nav-item">
             <span class="icone">📷</span>
             <span>Ler QR</span>
         </a>
-        <!-- Aqui está a correção principal: href="carrinho.html" -->
         <a href="carrinho.html" class="nav-item">
-            <div class="icone-com-badge">
-                <span class="icone">🛒</span>
-                <span id="badge-carrinho" class="badge-oculto">0</span>
-            </div>
+            <span class="icone">🛒</span>
             <span>Carrinho</span>
         </a>
     </nav>
-    <div id="toast-aviso" class="toast-oculto">Produto adicionado!</div>
 
-    <!-- SCRIPT DA TELA DE ABERTURA -->
-    <script>
-        const splashScreen = document.getElementById('splash-screen');
-        const videoAbertura = document.getElementById('video-abertura');
-        const btnPular = document.getElementById('pular-abertura');
-
-        // Função que faz a tela desaparecer suavemente
-        function fecharSplash() {
-            splashScreen.classList.add('escondido');
-        }
-
-        // 1. Esconde automaticamente quando o vídeo acabar
-        if (videoAbertura) {
-            videoAbertura.addEventListener('ended', fecharSplash);
-        }
-
-        // 2. Esconde se o cliente clicar em "Pular"
-        if (btnPular) {
-            btnPular.addEventListener('click', fecharSplash);
-        }
-
-        // 3. Segurança: Garante que a tela fecha após 8 segundos, caso haja algum erro
-        setTimeout(fecharSplash, 8000);
-    </script>
-    <script src="js/carrinho.js"></script>
 </body>
 
 </html>
