@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Frutos de Goiás | Cardápio Digital</title>
     <!-- Fontes do Google -->
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- Liga ao CSS do Cardápio (atualizado para v=2 para limpar cache) -->
     <link rel="stylesheet" href="css/app.css?v=2">
 </head>
@@ -25,7 +26,7 @@
 
     <!-- CONTEÚDO PRINCIPAL -->
     <main class="app-conteudo">
-        
+
         <!-- Barra de Categorias Horizontal -->
         <div class="categorias-scroll">
             <button class="categoria-btn ativo">Todos</button>
@@ -39,7 +40,7 @@
 
         <!-- GRELHA DE PRODUTOS PREMIUM -->
         <div class="grelha-produtos">
-            
+
             <!-- Produto 1 -->
             <div class="produto-card">
                 <div class="produto-imagem">
@@ -103,13 +104,13 @@
         </div>
     </main>
 
-    <!-- BARRA DE NAVEGAÇÃO INFERIOR ESTILO APP NATIVA -->
+   <!-- BARRA DE NAVEGAÇÃO INFERIOR ESTILO APP NATIVA -->
     <nav class="bottom-bar">
         <a href="app.html" class="nav-item ativo">
             <span class="icone">🏠</span>
             <span>Início</span>
         </a>
-        <a href="#" class="nav-item">
+        <a href="app.html" class="nav-item">
             <span class="icone">📜</span>
             <span>Cardápio</span>
         </a>
@@ -117,11 +118,14 @@
             <span class="icone">📷</span>
             <span>Ler QR</span>
         </a>
-        <a href="carrinho.html" class="nav-item">
+        <a href="carrinho.html" class="nav-item" style="position: relative;">
             <span class="icone">🛒</span>
             <span>Carrinho</span>
+            <span id="contador-carrinho" style="display: none; position: absolute; top: 2px; right: 18px; background-color: #ff4444; color: #FFF; font-size: 0.65rem; font-weight: bold; padding: 2px 5px; border-radius: 50px; min-width: 14px; text-align: center;">0</span>
         </a>
     </nav>
-<!-- Liga ao JavaScript do cardápio -->
-<script src="js/app.js?v=2"></script></body>
+    <!-- Liga ao JavaScript do cardápio -->
+    <script src="js/app.js?v=2"></script>
+</body>
+
 </html>
