@@ -47,13 +47,52 @@
             font-size: 0.95rem;
         }
 
+        .controles-quantidade {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .btn-qtd {
+            background: rgba(255, 255, 255, 0.15);
+            color: #FFF;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-qtd:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .qtd-numero {
+            color: #FFF;
+            font-weight: bold;
+            font-size: 0.95rem;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .Acoes-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
         .btn-remover {
             background: rgba(255, 68, 68, 0.2);
             color: #ff4444;
             border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 6px 10px;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 0.8rem;
             font-weight: bold;
             transition: background 0.2s;
         }
@@ -93,6 +132,12 @@
             color: var(--cor-verde);
         }
 
+        .botoes-acao-carrinho {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
         .btn-whatsapp {
             display: block;
             width: 100%;
@@ -112,6 +157,22 @@
 
         .btn-whatsapp:hover {
             background-color: #20ba5a;
+        }
+
+        .btn-esvaziar {
+            background: transparent;
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.4);
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .btn-esvaziar:hover {
+            background: rgba(255, 68, 68, 0.1);
         }
     </style>
 </head>
@@ -143,7 +204,10 @@
                     <span>Total:</span>
                     <span id="preco-total">R$ 0,00</span>
                 </div>
-                <button id="btn-finalizar" class="btn-whatsapp">Finalizar Pedido via WhatsApp 🚀</button>
+                <div class="botoes-acao-carrinho">
+                    <button id="btn-finalizar" class="btn-whatsapp">Finalizar Pedido via WhatsApp 🚀</button>
+                    <button id="btn-esvaziar" class="btn-esvaziar" onclick="esvaziarCarrinho()">Esvaziar Carrinho</button>
+                </div>
             </div>
 
         </div>
@@ -170,7 +234,7 @@
         </a>
     </nav>
 
-    <!-- Script de Gestão do Carrinho -->
+    <!-- Script de Gestão do Carrinho Otimizado -->
     <script>
         function carregarCarrinho() {
             const listaElem = document.getElementById('lista-carrinho');
@@ -180,10 +244,12 @@
             
             let carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
 
-            // Atualiza contador da barra inferior
+            // Calcula total de itens considerando as quantidades
+            let totalItensCount = carrinho.reduce((acc, item) => acc + (item.quantidade || 1), 0);
+
             if (carrinho.length > 0) {
                 contadorElem.style.display = 'inline-block';
-                contadorElem.innerText = carrinho.length;
+                contadorElem.innerText = totalItensCount;
                 resumoElem.style.display = 'block';
             } else {
                 contadorElem.style.display = 'none';
@@ -192,27 +258,51 @@
                 return;
             }
 
-            // Renderiza os produtos
+            // Renderiza os produtos com controlos de quantidade
             let html = '';
             let totalGeral = 0;
 
             carrinho.forEach((produto, index) => {
+                let qtd = produto.quantidade || 1;
                 let precoNumerico = parseFloat(produto.preco.replace('R$', '').replace(',', '.').trim()) || 0;
-                totalGeral += precoNumerico;
+                let subtotalItem = precoNumerico * qtd;
+                totalGeral += subtotalItem;
 
                 html += `
                     <div class="item-carrinho">
                         <div class="item-detalhes">
                             <h4>${produto.titulo}</h4>
-                            <p>${produto.preco}</p>
+                            <p>${produto.preco} un.</p>
+                            <div class="controles-quantidade">
+                                <button class="btn-qtd" onclick="alterarQuantidade(${index}, -1)">-</button>
+                                <span class="qtd-numero">${qtd}</span>
+                                <button class="btn-qtd" onclick="alterarQuantidade(${index}, 1)">+</button>
+                            </div>
                         </div>
-                        <button class="btn-remover" onclick="removerItem(${index})">Remover</button>
+                        <div class="Acoes-item">
+                            <span style="color: #FFF; font-weight: bold; font-size: 0.95rem;">R$ ${subtotalItem.toFixed(2).replace('.', ',')}</span>
+                            <button class="btn-remover" onclick="removerItem(${index})">Remover</button>
+                        </div>
                     </div>
                 `;
             });
 
             listaElem.innerHTML = html;
             precoTotalElem.innerText = `R$ ${totalGeral.toFixed(2).replace('.', ',')}`;
+        }
+
+        function alterarQuantidade(index, delta) {
+            let carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
+            if (!carrinho[index]) return;
+
+            carrinho[index].quantidade = (carrinho[index].quantidade || 1) + delta;
+
+            if (carrinho[index].quantidade <= 0) {
+                carrinho.splice(index, 1);
+            }
+
+            localStorage.setItem('carrinho_frutos', JSON.stringify(carrinho));
+            carregarCarrinho();
         }
 
         function removerItem(index) {
@@ -222,12 +312,18 @@
             carregarCarrinho();
         }
 
-        // Finalizar pedido enviando para o WhatsApp com a identificação da mesa
+        function esvaziarCarrinho() {
+            if (confirm("Tens a certeza de que pretendes esvaziar o carrinho?")) {
+                localStorage.removeItem('carrinho_frutos');
+                carregarCarrinho();
+            }
+        }
+
+        // Finalizar pedido enviando para o WhatsApp com quantidades e mesa
         document.getElementById('btn-finalizar').addEventListener('click', () => {
             let carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
             if (carrinho.length === 0) return;
 
-            // Recupera a mesa lida pelo QR Code (se não houver, assume "Balcão / Delivery")
             let mesaCliente = localStorage.getItem('mesa_frutos') || 'Balcão / Delivery';
 
             let mensagem = `Olá! Gostaria de fazer o seguinte pedido:%0A`;
@@ -236,14 +332,14 @@
             let totalGeral = 0;
 
             carrinho.forEach((item) => {
-                mensagem += `- ${item.titulo} (${item.preco})%0A`;
+                let qtd = item.quantidade || 1;
+                mensagem += `- ${qtd}x ${item.titulo} (${item.preco})%0A`;
                 let precoNum = parseFloat(item.preco.replace('R$', '').replace(',', '.').trim()) || 0;
-                totalGeral += precoNum;
+                totalGeral += (precoNum * qtd);
             });
 
             mensagem += `%0A*Total: R$ ${totalGeral.toFixed(2).replace('.', ',')}*`;
 
-            // Substitui pelo número de WhatsApp do estabelecimento
             const numeroWhatsApp = "5589999999999"; 
             const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensagem}`;
 
@@ -252,6 +348,11 @@
 
         // Executa ao carregar a página
         document.addEventListener('DOMContentLoaded', () => {
+            // Garante retrocompatibilidade com itens antigos sem propriedade de quantidade
+            let carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
+            carrinho = carrinho.map(item => ({ ...item, quantidade: item.quantidade || 1 }));
+            localStorage.setItem('carrinho_frutos', JSON.stringify(carrinho));
+
             carregarCarrinho();
         });
     </script>
