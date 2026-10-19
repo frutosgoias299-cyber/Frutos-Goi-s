@@ -109,3 +109,121 @@ app.delete('/api/produtos', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor a correr em http://localhost:${PORT}`);
 });
+// ================= CONTROLO DE EQUIPA =================
+app.get('/api/funcionarios', async (req, res) => {
+    try {
+        const { rows } = await pool.query('SELECT id, nome, cargo, ativo FROM funcionarios ORDER BY nome ASC');
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ erro: 'Falha ao buscar equipa' });
+    }
+});
+
+app.post('/api/funcionarios', async (req, res) => {
+    const { nome, cargo, chave_acesso } = req.body;
+    try {
+        const { rows } = await pool.query(
+            'INSERT INTO funcionarios (nome, cargo, chave_acesso) VALUES ($1, $2, $3) RETURNING id, nome, cargo',
+            [nome, cargo || 'Atendente', chave_acesso]
+        );
+        res.status(201).json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ erro: 'Falha ao registar funcionário' });
+    }
+});
+
+// ================= CONTROLO DE VENDAS =================
+app.get('/api/vendas/resumo-hoje', async (req, res) => {
+    try {
+        const { rows } = await pool.query(`
+            SELECT 
+                COUNT(*) as total_pedidos,
+                COALESCE(SUM(valor_total), 0) as faturamento_total
+            FROM vendas
+            WHERE criado_em::date = CURRENT_DATE
+        `);
+        res.json(rows[0]);
+    } catch (err) {
+        res.status(500).json({ erro: 'Falha ao calcular métricas' });
+    }
+});
+
+app.post('/api/vendas', async (req, res) => {
+    const { funcionario_id, mesa, forma_pagamento, itens, valor_total } = req.body;
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        // 1. Gravar Venda
+        const queryVenda = `
+            INSERT INTO vendas (funcionario_id, mesa, forma_pagamento, itens_json, valor_total)
+            VALUES ($1, $2, $3, $4, $5) RETURNING id;
+        `;
+        const resVenda = await client.query(queryVenda, [
+            funcionario_id || null, 
+            mesa || 'Balcão', 
+            forma_pagamento, 
+            JSON.stringify(itens), 
+            valor_total
+        ]);
+
+        // 2. Dar baixa automática de stock para cada item vendido
+        for (const item of itens) {
+            await client.query(`
+                UPDATE produtos 
+                SET estoque = GREATEST(estoque - $1, 0)
+                WHERE id = $2;
+            `, [item.qtd, item.id]);
+
+            await client.query(`
+                INSERT INTO movimentacoes_estoque (produto_id, funcionario_id, tipo, quantidade, motivo)
+                VALUES ($1, $2, 'SAIDA', $3, 'Venda Balcão/Mesa');
+            `, [item.id, funcionario_id || null, item.qtd]);
+        }
+
+        await client.query('COMMIT');
+        res.status(201).json({ sucesso: true, venda_id: resVenda.rows[0].id });
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error('Erro na venda:', err);
+        res.status(500).json({ erro: 'Erro ao processar venda' });
+    } finally {
+        client.release();
+    }
+});
+
+// ================= MOVIMENTAÇÃO DE STOCK (ENTRADA / SAÍDA) =================
+app.post('/api/estoque/movimentacao', async (req, res) => {
+    const { produto_id, funcionario_id, tipo, quantidade, motivo } = req.body;
+    const qtd = parseInt(quantidade, 10);
+
+    if (!produto_id || !tipo || isNaN(qtd) || qtd <= 0) {
+        return res.status(400).json({ erro: 'Dados inválidos' });
+    }
+
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+
+        const operacao = tipo === 'ENTRADA' ? `estoque + $1` : `GREATEST(estoque - $1, 0)`;
+        await client.query(`
+            UPDATE produtos 
+            SET estoque = ${operacao} 
+            WHERE id = $2;
+        `, [qtd, produto_id]);
+
+        await client.query(`
+            INSERT INTO movimentacoes_estoque (produto_id, funcionario_id, tipo, quantidade, motivo)
+            VALUES ($1, $2, $3, $4, $5);
+        `, [produto_id, funcionario_id || null, tipo, qtd, motivo]);
+
+        await client.query('COMMIT');
+        res.status(201).json({ sucesso: true });
+    } catch (err) {
+        await client.query('ROLLBACK');
+        res.status(500).json({ erro: 'Falha ao movimentar stock' });
+    } finally {
+        client.release();
+    }
+});
