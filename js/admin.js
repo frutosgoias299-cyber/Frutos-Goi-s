@@ -47,7 +47,7 @@ function configurarNavegacaoAbas() {
         });
     });
 
-    // Garante que só a primeira secção fica visível ao carregar
+    // Garante que só a primeira seção fica visível ao carregar
     secoes.forEach((sec, idx) => {
         if (idx === 0) {
             sec.classList.add('ativa');
@@ -98,7 +98,10 @@ function atualizarInterface() {
         selMov.innerHTML = produtos.map(p => `<option value="${p.id}">${p.codigo || ''} ${p.nome} (${p.estoque || 0} un)</option>`).join('');
     }
     if (selVenda) {
-        selVenda.innerHTML = produtos.map(p => `<option value="${p.id}">${p.nome} - R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</option>`).join('');
+        selVenda.innerHTML = produtos.map(p => {
+            const precoFormatado = parseFloat(p.preco || 0).toFixed(2).replace('.', ',');
+            return `<option value="${p.id}">${p.nome} - R$ ${precoFormatado}</option>`;
+        }).join('');
     }
     if (selFunc) {
         selFunc.innerHTML = equipe.map(f => `<option value="${f.id}">${f.nome} (${f.cargo})</option>`).join('');
