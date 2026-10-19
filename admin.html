@@ -7,13 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/admin.css?v=10">
+    <link rel="stylesheet" href="css/admin.css?v=12">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-    <!-- Script Inline Global: Garante que os botões funcionam sempre -->
+    <!-- Script Inline Global: Garante a navegação imediata das abas -->
     <script>
         function trocarAba(idClasse, btnElemento) {
-            // 1. Atualiza visual dos botões
             var botoes = document.querySelectorAll('.btn-classe');
             for (var i = 0; i < botoes.length; i++) {
                 botoes[i].classList.remove('ativa');
@@ -22,31 +21,28 @@
                 btnElemento.classList.add('ativa');
             }
 
-            // 2. Oculta todas as seções
             var secoes = document.querySelectorAll('.painel-secao');
             for (var j = 0; j < secoes.length; j++) {
                 secoes[j].classList.remove('ativa');
-                secoes[j].style.display = 'none';
+                secoes[j].style.setProperty('display', 'none', 'important');
             }
 
-            // 3. Mostra apenas a seção clicada
             var alvo = document.getElementById('classe-' + idClasse);
             if (alvo) {
                 alvo.classList.add('ativa');
-                alvo.style.display = 'block';
+                alvo.style.setProperty('display', 'block', 'important');
             }
         }
 
-        // Garante que ao abrir a tela só a primeira aba apareça
         document.addEventListener('DOMContentLoaded', function() {
             var secoes = document.querySelectorAll('.painel-secao');
             for (var i = 0; i < secoes.length; i++) {
                 if (i === 0) {
                     secoes[i].classList.add('ativa');
-                    secoes[i].style.display = 'block';
+                    secoes[i].style.setProperty('display', 'block', 'important');
                 } else {
                     secoes[i].classList.remove('ativa');
-                    secoes[i].style.display = 'none';
+                    secoes[i].style.setProperty('display', 'none', 'important');
                 }
             }
         });
@@ -64,14 +60,14 @@
             <a href="cardapio.html" target="_blank" class="btn-cardapio-atalho">Ver Cardápio ↗</a>
         </header>
 
-        <!-- Navegação com onclick global direto -->
+        <!-- Navegação por Classes -->
         <nav class="nav-classes">
-            <button class="btn-classe ativa" onclick="trocarAba('produtos', this)">🍦 Produtos</button>
-            <button class="btn-classe" onclick="trocarAba('estoque', this)">📦 Estoque & Saídas</button>
-            <button class="btn-classe" onclick="trocarAba('vendas', this)">💳 Caixa & Vendas</button>
-            <button class="btn-classe" onclick="trocarAba('banners', this)">🏷️ Banners</button>
-            <button class="btn-classe" onclick="trocarAba('equipe', this)">👥 Equipe</button>
-            <button class="btn-classe" onclick="trocarAba('mesas', this)">📱 QR Mesas & Impressão</button>
+            <button type="button" class="btn-classe ativa" onclick="trocarAba('produtos', this)">🍦 Produtos</button>
+            <button type="button" class="btn-classe" onclick="trocarAba('estoque', this)">📦 Estoque & Saídas</button>
+            <button type="button" class="btn-classe" onclick="trocarAba('vendas', this)">💳 Caixa & Vendas</button>
+            <button type="button" class="btn-classe" onclick="trocarAba('banners', this)">🏷️ Banners</button>
+            <button type="button" class="btn-classe" onclick="trocarAba('equipe', this)">👥 Equipe</button>
+            <button type="button" class="btn-classe" onclick="trocarAba('mesas', this)">📱 QR Mesas & Impressão</button>
         </nav>
 
         <div id="feedback-toast">Ação concluída com sucesso!</div>
@@ -198,7 +194,7 @@
                         </div>
                     </div>
 
-                    <button type="button" id="btn-add-caixa" class="btn-secundario">+ Adicionar Item</button>
+                    <button type="button" class="btn-secundario" onclick="adicionarItemCaixa()">+ Adicionar Item</button>
 
                     <div style="background: #171c19; padding: 12px; border-radius: 10px; margin-top: 6px;">
                         <div id="caixa-itens-lista" style="font-size: 0.85rem; color: #ddd; min-height: 24px;">Nenhum item adicionado.</div>
@@ -217,7 +213,7 @@
                         </select>
                     </div>
 
-                    <button type="button" id="btn-fechar-venda" class="btn-salvar">Concluir Venda</button>
+                    <button type="button" class="btn-salvar" onclick="concluirVendaCaixa()">Concluir Venda</button>
                 </div>
             </div>
         </section>
@@ -295,7 +291,7 @@
         <section id="classe-mesas" class="painel-secao">
             <div class="card-bloco">
                 <h2 class="card-titulo">Cardápio de Mesa</h2>
-                <button id="btn-imprimir-a4" class="btn-salvar" style="width: 100%; margin-bottom: 20px;">📄 Imprimir Cardápio Elegante (A4)</button>
+                <button type="button" class="btn-salvar" onclick="imprimirCardapioFisicoA4()" style="width: 100%; margin-bottom: 20px;">📄 Imprimir Cardápio Elegante (A4)</button>
 
                 <h3 style="font-size: 0.9rem; color: var(--verde-oficial); margin-bottom: 10px;">Gerador de Placa com QR Code</h3>
                 <div class="form-grid">
@@ -309,13 +305,13 @@
                             <input type="text" id="url-base-input" class="campo-input">
                         </div>
                     </div>
-                    <button type="button" id="btn-gerar-placa" class="btn-secundario">Gerar Placa</button>
+                    <button type="button" class="btn-secundario" onclick="gerarPlacaMesa()">Gerar Placa</button>
                 </div>
 
                 <div id="bloco-resultado-qr" style="display: none; text-align: center; margin-top: 20px; background: #161b18; padding: 16px; border-radius: 12px;">
                     <div id="qrcode-container" style="background: #fff; padding: 12px; display: inline-block; border-radius: 8px;"></div>
                     <div style="margin-top: 14px;">
-                        <button type="button" id="btn-imprimir-adesivo" class="btn-secundario">🖨️ Imprimir Placa da Mesa</button>
+                        <button type="button" class="btn-secundario" onclick="imprimirAdesivoMesa()">🖨️ Imprimir Placa da Mesa</button>
                     </div>
                 </div>
             </div>
@@ -323,7 +319,7 @@
 
     </div>
 
-    <!-- Script modular dos dados -->
-    <script type="module" src="js/admin.js?v=10"></script>
+    <!-- Script tradicional sem módulos para execução garantida no GitHub Pages -->
+    <script src="js/admin.js?v=25"></script>
 </body>
 </html>
