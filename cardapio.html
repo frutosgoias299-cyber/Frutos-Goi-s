@@ -4,12 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Frutos de Goiás | Cardápio Artesanal</title>
-    <!-- Tipografia refinada -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Folha de estilos dedicada -->
-    <link rel="stylesheet" href="css/cardapio.css?v=4">
+    <link rel="stylesheet" href="css/cardapio.css?v=6">
+    <style>
+        .campo-busca-container {
+            padding: 10px 20px 5px;
+        }
+        .input-busca {
+            width: 100%;
+            background: #141715;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-busca:focus {
+            border-color: #00FF66;
+        }
+        .badge-codigo {
+            background: rgba(255, 255, 255, 0.08);
+            color: #888;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 6px;
+            font-family: monospace;
+        }
+    </style>
 </head>
 <body>
 
@@ -18,6 +44,11 @@
         <span id="rotulo-mesa" class="selo-mesa">Mesa 01</span>
     </header>
 
+    <!-- Barra de Busca Rápida -->
+    <div class="campo-busca-container">
+        <input type="text" id="campo-busca" class="input-busca" placeholder="🔍 Digite o nome ou código (ex: #03)..." oninput="filtrarProdutos()">
+    </div>
+
     <nav class="categorias-scroll">
         <button class="btn-categoria ativo" onclick="selecionarCategoria('todos')">Todos</button>
         <button class="btn-categoria" onclick="selecionarCategoria('picoles')">Picolés</button>
@@ -25,11 +56,8 @@
         <button class="btn-categoria" onclick="selecionarCategoria('acai')">Açaí</button>
     </nav>
 
-    <main class="vitrine" id="grid-vitrine">
-        <!-- Renderizado dinamicamente via JavaScript -->
-    </main>
+    <main class="vitrine" id="grid-vitrine"></main>
 
-    <!-- Barra de Pedido Flutuante -->
     <div id="barra-pedido" class="barra-pedido">
         <div class="resumo-pedido">
             <span id="total-itens" class="resumo-itens">0 itens selecionados</span>
@@ -38,18 +66,19 @@
         <button class="btn-concluir" onclick="finalizarWhatsApp()">Pedir via WhatsApp</button>
     </div>
 
+    <footer style="text-align: center; padding: 40px 20px 20px;">
+        <a href="admin.html" style="color: #444; font-size: 0.75rem; text-decoration: none;">⚙️ Gestão & Impressão</a>
+    </footer>
+
     <script>
-        // 1. Identificar Mesa pela URL (?mesa=03) ou LocalStorage
         const params = new URLSearchParams(window.location.search);
         const paramMesa = params.get('mesa');
-        if (paramMesa) {
-            localStorage.setItem('mesa_ativa', `Mesa ${paramMesa}`);
-        }
+        if (paramMesa) localStorage.setItem('mesa_ativa', `Mesa ${paramMesa}`);
         const mesa = localStorage.getItem('mesa_ativa') || 'Balcão';
         document.getElementById('rotulo-mesa').innerText = mesa;
 
-        // 2. Estado dos Produtos e do Pedido
         let produtos = [];
+        let categoriaAtiva = 'todos';
         let pedido = {};
 
         async function carregarProdutos() {
@@ -58,23 +87,23 @@
                 if (!res.ok) throw new Error();
                 produtos = await res.json();
             } catch (e) {
-                // Catálogo de demonstração com fotos de alta qualidade
-                produtos = [
-                    { id: 1, nome: "Picolé Ninho Trufado", categoria: "picoles", preco: 8.50, descricao: "Cremoso com recheio de creme de avelã", imagem_url: "https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=400&q=80" },
-                    { id: 2, nome: "Picolé de Maracujá", categoria: "picoles", preco: 6.00, descricao: "100% polpa de fruta natural", imagem_url: "https://images.unsplash.com/photo-1488900128323-21503983a07e?w=400&q=80" },
-                    { id: 3, nome: "Taça Suprema de Morango", categoria: "gelados", preco: 24.00, descricao: "Gelado artesanal, morangos e raspas de chocolate", imagem_url: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=80" },
-                    { id: 4, nome: "Tigela Açaí Puro 500ml", categoria: "acai", preco: 22.00, descricao: "Batido na consistência ideal com granola artesanal", imagem_url: "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=400&q=80" }
-                ];
+                produtos = JSON.parse(localStorage.getItem('produtos_banco_mock')) || [];
             }
-            renderizarVitrine(produtos);
+            filtrarProdutos();
         }
 
         function renderizarVitrine(lista) {
             const grid = document.getElementById('grid-vitrine');
             grid.innerHTML = '';
 
-            lista.forEach(item => {
+            if (lista.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #888; padding: 40px 0;">Nenhum produto encontrado.</div>';
+                return;
+            }
+
+            lista.filter(p => p.disponivel !== false).forEach(item => {
                 const precoFormatado = parseFloat(item.preco).toFixed(2).replace('.', ',');
+                const cod = item.codigo || `#${String(item.id).padStart(2, '0')}`;
                 const card = document.createElement('div');
                 card.className = 'card-produto';
                 card.innerHTML = `
@@ -82,7 +111,7 @@
                         ${item.imagem_url ? `<img src="${item.imagem_url}" alt="${item.nome}" loading="lazy">` : `<span class="imagem-fallback">🍨</span>`}
                     </div>
                     <div class="info-produto">
-                        <h2 class="titulo-produto">${item.nome}</h2>
+                        <h2 class="titulo-produto"><span class="badge-codigo">${cod}</span>${item.nome}</h2>
                         <p class="descricao-produto">${item.descricao || ''}</p>
                         <div class="rodape-produto">
                             <span class="preco-produto">R$ ${precoFormatado}</span>
@@ -94,37 +123,42 @@
             });
         }
 
+        function filtrarProdutos() {
+            const termo = document.getElementById('campo-busca').value.toLowerCase().trim();
+            let filtrados = produtos;
+
+            if (categoriaAtiva !== 'todos') {
+                filtrados = filtrados.filter(p => p.categoria.toLowerCase() === categoriaAtiva.toLowerCase());
+            }
+
+            if (termo) {
+                filtrados = filtrados.filter(p => {
+                    const cod = (p.codigo || `#${String(p.id).padStart(2, '0')}`).toLowerCase();
+                    return p.nome.toLowerCase().includes(termo) || cod.includes(termo);
+                });
+            }
+
+            renderizarVitrine(filtrados);
+        }
+
         function selecionarCategoria(cat) {
+            categoriaAtiva = cat;
             document.querySelectorAll('.btn-categoria').forEach(b => b.classList.remove('ativo'));
             event.target.classList.add('ativo');
-
-            if (cat === 'todos') {
-                renderizarVitrine(produtos);
-            } else {
-                renderizarVitrine(produtos.filter(p => p.categoria.toLowerCase() === cat.toLowerCase()));
-            }
+            filtrarProdutos();
         }
 
         function adicionar(id) {
             const item = produtos.find(p => p.id === id);
             if (!item) return;
-
-            if (pedido[id]) {
-                pedido[id].qtd += 1;
-            } else {
-                pedido[id] = { nome: item.nome, preco: parseFloat(item.preco), qtd: 1 };
-            }
+            if (pedido[id]) pedido[id].qtd += 1;
+            else pedido[id] = { nome: item.nome, preco: parseFloat(item.preco), qtd: 1 };
             atualizarBarraPedido();
         }
 
         function atualizarBarraPedido() {
             const barra = document.getElementById('barra-pedido');
-            const totalItensElem = document.getElementById('total-itens');
-            const totalValorElem = document.getElementById('total-valor');
-
-            let qtdTotal = 0;
-            let valorTotal = 0;
-
+            let qtdTotal = 0, valorTotal = 0;
             Object.values(pedido).forEach(item => {
                 qtdTotal += item.qtd;
                 valorTotal += (item.preco * item.qtd);
@@ -132,28 +166,22 @@
 
             if (qtdTotal > 0) {
                 barra.style.display = 'flex';
-                totalItensElem.innerText = `${qtdTotal} ${qtdTotal === 1 ? 'item' : 'itens'} selecionado${qtdTotal === 1 ? '' : 's'}`;
-                totalValorElem.innerText = `R$ ${valorTotal.toFixed(2).replace('.', ',')}`;
+                document.getElementById('total-itens').innerText = `${qtdTotal} itens selecionados`;
+                document.getElementById('total-valor').innerText = `R$ ${valorTotal.toFixed(2).replace('.', ',')}`;
             } else {
                 barra.style.display = 'none';
             }
         }
 
         function finalizarWhatsApp() {
-            let msg = `Olá! Gostaria de fazer o seguinte pedido:%0A`;
-            msg += `📍 *${mesa}*%0A%0A`;
-
-            let valorTotal = 0;
+            let msg = `Olá! Pedido da *${mesa}*:%0A%0A`;
+            let total = 0;
             Object.values(pedido).forEach(item => {
-                const sub = (item.preco * item.qtd).toFixed(2).replace('.', ',');
-                msg += `• ${item.qtd}x ${item.nome} (R$ ${sub})%0A`;
-                valorTotal += (item.preco * item.qtd);
+                msg += `• ${item.qtd}x ${item.nome} - R$ ${(item.preco * item.qtd).toFixed(2).replace('.', ',')}%0A`;
+                total += (item.preco * item.qtd);
             });
-
-            msg += `%0A*Total: R$ ${valorTotal.toFixed(2).replace('.', ',')}*`;
-
-            const numeroWhatsApp = "5589999999999"; // Substituir pelo número da sorveteria
-            window.open(`https://wa.me/${numeroWhatsApp}?text=${msg}`, '_blank');
+            msg += `%0A*Total: R$ ${total.toFixed(2).replace('.', ',')}*`;
+            window.open(`https://wa.me/5589999999999?text=${msg}`, '_blank');
         }
 
         document.addEventListener('DOMContentLoaded', carregarProdutos);
