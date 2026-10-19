@@ -121,11 +121,80 @@
         }
     </style>
 
-    <!-- Script básico para o botão de finalizar via WhatsApp (exemplo) -->
+   <!-- Script completo para gerir e exibir o Carrinho -->
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarCarrinho();
+        });
+
+        function carregarCarrinho() {
+            const carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
+            const containerVazio = document.getElementById('carrinho-vazio');
+            const containerConteudo = document.getElementById('carrinho-conteudo');
+            const listaCarrinho = document.getElementById('lista-carrinho');
+            const precoTotalElem = document.getElementById('preco-total');
+
+            if (carrinho.length === 0) {
+                containerVazio.style.display = 'flex';
+                containerConteudo.style.display = 'none';
+                return;
+            }
+
+            // Mostra o conteúdo e esconde o estado vazio
+            containerVazio.style.display = 'none';
+            containerConteudo.style.display = 'block';
+
+            listaCarrinho.innerHTML = '';
+            let total = 0;
+
+            carrinho.forEach((item, index) => {
+                // Converte o preço string (ex: "R$ 6,00") para número float (6.00)
+                let precoNumerico = parseFloat(item.preco.replace('R$', '').replace(',', '.').trim()) || 0;
+                total += precoNumerico;
+
+                const itemDiv = document.createElement('div');
+                itemDiv.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 12px 16px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05);";
+                
+                itemDiv.innerHTML = `
+                    <div>
+                        <h4 style="margin: 0; font-size: 0.95rem; color: #FFF;">${item.titulo}</h4>
+                        <span style="font-size: 0.85rem; color: var(--cor-verde);">${item.preco}</span>
+                    </div>
+                    <button onclick="removerItem(${index})" style="background: none; border: none; color: #ff4444; font-size: 1.1rem; cursor: pointer;">🗑️</button>
+                `;
+                listaCarrinho.appendChild(itemDiv);
+            });
+
+            precoTotalElem.innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+
+        function removerItem(index) {
+            let carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
+            carrinho.splice(index, 1);
+            localStorage.setItem('carrinho_frutos', JSON.stringify(carrinho));
+            carregarCarrinho(); // Atualiza a tela
+        }
+
         function finalizarPedidoWhatsApp() {
-            alert("Redirecionando para o WhatsApp para concluir o pedido!");
-            // Podes colocar aqui a lógica para abrir o link do WhatsApp com os dados do carrinho
+            const carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
+            if (carrinho.length === 0) return;
+
+            let mensagem = "Olá! Gostaria de fazer o seguinte pedido:%0A";
+            let total = 0;
+
+            carrinho.forEach(item => {
+                mensagem += `- ${item.titulo} (${item.preco})%0A`;
+                let precoNum = parseFloat(item.preco.replace('R$', '').replace(',', '.').trim()) || 0;
+                total += precoNum;
+            });
+
+            mensagem += `%0A*Total:* R$ ${total.toFixed(2).replace('.', ',')}`;
+
+            // Substitui pelo número de WhatsApp real do estabelecimento (ex: 5561999999999)
+            const numeroWhatsApp = "5500999999999"; 
+            const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensagem}`;
+
+            window.open(urlWhatsApp, '_blank');
         }
     </script>
 </body>
