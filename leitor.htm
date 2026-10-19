@@ -88,7 +88,12 @@
     <!-- Script para Ligar a Câmara -->
     <script>
         function aoLerQRCodeSucesso(textoDecodificado, resultadoDecodificado) {
-            alert(`QR Code LIDO: ${textoDecodificado}`);
+            // Guarda o número ou identificador da mesa no localStorage
+            localStorage.setItem('mesa_frutos', textoDecodificado);
+            
+            alert(`Mesa identificada com sucesso: ${textoDecodificado}`);
+            
+            // Redireciona para o cardápio
             window.location.href = "app.html";
         }
 

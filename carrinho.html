@@ -197,7 +197,6 @@
             let totalGeral = 0;
 
             carrinho.forEach((produto, index) => {
-                // Converte o preço string "R$ 6,00" para número (6.00)
                 let precoNumerico = parseFloat(produto.preco.replace('R$', '').replace(',', '.').trim()) || 0;
                 totalGeral += precoNumerico;
 
@@ -223,12 +222,17 @@
             carregarCarrinho();
         }
 
-        // Finalizar pedido enviando para o WhatsApp
+        // Finalizar pedido enviando para o WhatsApp com a identificação da mesa
         document.getElementById('btn-finalizar').addEventListener('click', () => {
             let carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
             if (carrinho.length === 0) return;
 
-            let mensagem = "Olá! Gostaria de fazer o seguinte pedido:%0A%0A";
+            // Recupera a mesa lida pelo QR Code (se não houver, assume "Balcão / Delivery")
+            let mesaCliente = localStorage.getItem('mesa_frutos') || 'Balcão / Delivery';
+
+            let mensagem = `Olá! Gostaria de fazer o seguinte pedido:%0A`;
+            mensagem += `📍 *Origem/Mesa:* ${mesaCliente}%0A%0A`;
+            
             let totalGeral = 0;
 
             carrinho.forEach((item) => {
@@ -239,7 +243,7 @@
 
             mensagem += `%0A*Total: R$ ${totalGeral.toFixed(2).replace('.', ',')}*`;
 
-            // Substitui pelo número de WhatsApp do estabelecimento (exemplo)
+            // Substitui pelo número de WhatsApp do estabelecimento
             const numeroWhatsApp = "5589999999999"; 
             const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensagem}`;
 
