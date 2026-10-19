@@ -7,8 +7,50 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/admin.css?v=7">
+    <link rel="stylesheet" href="css/admin.css?v=10">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <!-- Script Inline Global: Garante que os botões funcionam sempre -->
+    <script>
+        function trocarAba(idClasse, btnElemento) {
+            // 1. Atualiza visual dos botões
+            var botoes = document.querySelectorAll('.btn-classe');
+            for (var i = 0; i < botoes.length; i++) {
+                botoes[i].classList.remove('ativa');
+            }
+            if (btnElemento) {
+                btnElemento.classList.add('ativa');
+            }
+
+            // 2. Oculta todas as seções
+            var secoes = document.querySelectorAll('.painel-secao');
+            for (var j = 0; j < secoes.length; j++) {
+                secoes[j].classList.remove('ativa');
+                secoes[j].style.display = 'none';
+            }
+
+            // 3. Mostra apenas a seção clicada
+            var alvo = document.getElementById('classe-' + idClasse);
+            if (alvo) {
+                alvo.classList.add('ativa');
+                alvo.style.display = 'block';
+            }
+        }
+
+        // Garante que ao abrir a tela só a primeira aba apareça
+        document.addEventListener('DOMContentLoaded', function() {
+            var secoes = document.querySelectorAll('.painel-secao');
+            for (var i = 0; i < secoes.length; i++) {
+                if (i === 0) {
+                    secoes[i].classList.add('ativa');
+                    secoes[i].style.display = 'block';
+                } else {
+                    secoes[i].classList.remove('ativa');
+                    secoes[i].style.display = 'none';
+                }
+            }
+        });
+    </script>
 </head>
 <body>
 
@@ -22,14 +64,14 @@
             <a href="cardapio.html" target="_blank" class="btn-cardapio-atalho">Ver Cardápio ↗</a>
         </header>
 
-        <!-- Navegação Modular por data-classe -->
+        <!-- Navegação com onclick global direto -->
         <nav class="nav-classes">
-            <button class="btn-classe ativa" data-classe="produtos">🍦 Produtos</button>
-            <button class="btn-classe" data-classe="estoque">📦 Estoque & Saídas</button>
-            <button class="btn-classe" data-classe="vendas">💳 Caixa & Vendas</button>
-            <button class="btn-classe" data-classe="banners">🏷️ Banners</button>
-            <button class="btn-classe" data-classe="equipe">👥 Equipe</button>
-            <button class="btn-classe" data-classe="mesas">📱 QR Mesas & Impressão</button>
+            <button class="btn-classe ativa" onclick="trocarAba('produtos', this)">🍦 Produtos</button>
+            <button class="btn-classe" onclick="trocarAba('estoque', this)">📦 Estoque & Saídas</button>
+            <button class="btn-classe" onclick="trocarAba('vendas', this)">💳 Caixa & Vendas</button>
+            <button class="btn-classe" onclick="trocarAba('banners', this)">🏷️ Banners</button>
+            <button class="btn-classe" onclick="trocarAba('equipe', this)">👥 Equipe</button>
+            <button class="btn-classe" onclick="trocarAba('mesas', this)">📱 QR Mesas & Impressão</button>
         </nav>
 
         <div id="feedback-toast">Ação concluída com sucesso!</div>
@@ -281,7 +323,7 @@
 
     </div>
 
-    <!-- Script modular com importação ES6 -->
-    <script type="module" src="js/admin.js?v=9"></script>
+    <!-- Script modular dos dados -->
+    <script type="module" src="js/admin.js?v=10"></script>
 </body>
 </html>
