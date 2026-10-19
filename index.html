@@ -21,9 +21,6 @@
         <canvas id="tela-gelado"></canvas>
     </div>
 
-    <!-- CAMADA 2: O Vidro Quebrado (Comentado) -->
-    <!-- <img id="vidro-quebrado" src="vidro.jpeg" alt="Vidro Quebrado"> -->
-
     <!-- BOTÃO EXPLORAR (Auto-scroll para guiar o cliente) -->
     <div id="btn-explorar" onclick="descerAutomaticamente()">
         <span>Explorar</span>
@@ -62,12 +59,21 @@
             <div class="conteudo-centro">
                 <h2 class="sabor-texto verde">ENERGIA</h2>
                 <h2 class="sabor-texto branco">TROPICAL</h2>
-                <a href="app.html" class="botao-neon sabor-texto">PEDIR AGORA</a>
+                
+                <!-- CORREÇÃO: Aponta diretamente para o novo cardápio elegante -->
+                <a href="cardapio.html" class="botao-neon sabor-texto">PEDIR AGORA</a>
+
+                <!-- Acesso discreto ao Painel do Administrador -->
+                <div style="margin-top: 30px;">
+                    <a href="admin.html" style="color: #666; font-size: 0.8rem; text-decoration: none; font-family: 'Inter', sans-serif;">
+                        ⚙️ Área do Dono
+                    </a>
+                </div>
             </div>
         </section>
     </main>
 
-    <!-- Estilo rápido do botão Explorar inserido diretamente para garantir funcionamento imediato -->
+    <!-- Estilo do botão Explorar e ajustes visuais -->
     <style>
         #btn-explorar {
             position: fixed;
@@ -96,7 +102,7 @@
         }
     </style>
 
-    <!-- Script para o botão Explorar descer a tela suavemente -->
+    <!-- Script para descer a tela suavemente -->
     <script>
         function descerAutomaticamente() {
             window.scrollBy({
