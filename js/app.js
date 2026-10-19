@@ -1,4 +1,4 @@
-// js/app.js - Versão Final Unificada e Otimizada
+// js/app.js - Versão Final Unificada com Filtros
 
 // Função para atualizar o contador do carrinho no ícone da barra inferior
 function atualizarContadorCarrinho() {
@@ -23,11 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Configura os botões de adicionar (+)
     const botoesAdicionar = document.querySelectorAll('.btn-adicionar');
     
-    if (botoesAdicionar.length === 0) {
-        console.log("Aviso: Nenhum botão de adicionar encontrado.");
-        return;
-    }
-
     botoesAdicionar.forEach((botao) => {
         botao.addEventListener('click', (e) => {
             e.preventDefault();
@@ -53,6 +48,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Feedback visual rápido
             alert(`Adicionado ao carrinho: ${titulo} (${preco})`);
+        });
+    });
+
+    // 3. Sistema de Filtros por Categoria em Tempo Real
+    const botoesCategoria = document.querySelectorAll('.categoria-btn');
+    const cardsProdutos = document.querySelectorAll('.produto-card');
+
+    botoesCategoria.forEach((botao) => {
+        botao.addEventListener('click', () => {
+            // Remove a classe 'ativo' de todos os botões e aplica ao clicado
+            botoesCategoria.forEach(btn => btn.classList.remove('ativo'));
+            botao.classList.add('ativo');
+
+            const categoriaSelecionada = botao.innerText.toLowerCase();
+
+            cardsProdutos.forEach((card) => {
+                const categoriaCard = card.getAttribute('data-categoria');
+
+                if (categoriaSelecionada === 'todos' || 
+                   (categoriaSelecionada === 'picolés' && categoriaCard === 'picoles') ||
+                   (categoriaSelecionada === 'gelados' && categoriaCard === 'gelados') ||
+                   (categoriaSelecionada === 'açaí' && categoriaCard === 'acai') ||
+                   (categoriaSelecionada === 'especiais' && categoriaCard === 'especiais')) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
         });
     });
 });
