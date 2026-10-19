@@ -61,9 +61,11 @@
             <span class="icone">📷</span>
             <span>Ler QR</span>
         </a>
-        <a href="carrinho.html" class="nav-item ativo">
+        <a href="carrinho.html" class="nav-item" style="position: relative;">
             <span class="icone">🛒</span>
             <span>Carrinho</span>
+            <!-- Contador que começa oculto e só aparece se houver itens -->
+            <span id="contador-carrinho" style="display: none; position: absolute; top: 2px; right: 18px; background-color: #ff4444; color: #FFF; font-size: 0.65rem; font-weight: bold; padding: 2px 5px; border-radius: 50px; min-width: 14px; text-align: center;">0</span>
         </a>
     </nav>
 
