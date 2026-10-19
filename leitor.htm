@@ -72,12 +72,10 @@
             <span class="icone">📷</span>
             <span>Ler QR</span>
         </a>
-        <a href="carrinho.html" class="nav-item">
-            <div class="icone-com-badge">
-                <span class="icone">🛒</span>
-                <span id="badge-carrinho" class="badge-oculto">0</span>
-            </div>
+        <a href="carrinho.html" class="nav-item" style="position: relative;">
+            <span class="icone">🛒</span>
             <span>Carrinho</span>
+            <span id="contador-carrinho" style="display: none; position: absolute; top: 2px; right: 18px; background-color: #ff4444; color: #FFF; font-size: 0.65rem; font-weight: bold; padding: 2px 5px; border-radius: 50px; min-width: 14px; text-align: center;">0</span>
         </a>
     </nav>
 
@@ -90,23 +88,18 @@
     <!-- Script para Ligar a Câmara -->
     <script>
         function aoLerQRCodeSucesso(textoDecodificado, resultadoDecodificado) {
-            // O que acontece quando lê com sucesso!
             alert(`QR Code LIDO: ${textoDecodificado}`);
-            
-            // Aqui vamos programar depois para mudar o tipo de pedido para "Mesa X"
-            // Por enquanto, redireciona o cliente de volta para o cardápio
             window.location.href = "app.html";
         }
 
         function aoLerQRCodeErro(erro) {
-            // Fica calado a procurar o código (não fazemos nada aqui)
+            // Ignora erros de leitura enquanto procura o código na câmara
         }
 
-        // Ligar o leitor
         let html5QrcodeScanner = new Html5QrcodeScanner(
             "reader",
             { fps: 10, qrbox: {width: 250, height: 250} },
-            /* verbose= */ false);
+            false);
             
         html5QrcodeScanner.render(aoLerQRCodeSucesso, aoLerQRCodeErro);
     </script>
