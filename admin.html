@@ -22,14 +22,14 @@
             <a href="cardapio.html" target="_blank" class="btn-cardapio-atalho">Ver Cardápio ↗</a>
         </header>
 
-        <!-- Navegação por Classes -->
+        <!-- Navegação com clique direto e infalível -->
         <nav class="nav-classes">
-            <button class="btn-classe ativa" data-classe="produtos">🍦 Produtos</button>
-            <button class="btn-classe" data-classe="estoque">📦 Estoque & Saídas</button>
-            <button class="btn-classe" data-classe="vendas">💳 Caixa & Vendas</button>
-            <button class="btn-classe" data-classe="banners">🏷️ Banners</button>
-            <button class="btn-classe" data-classe="equipe">👥 Equipe</button>
-            <button class="btn-classe" data-classe="mesas">📱 QR Mesas & Impressão</button>
+            <button class="btn-classe ativa" onclick="trocarAba('produtos', this)">🍦 Produtos</button>
+            <button class="btn-classe" onclick="trocarAba('estoque', this)">📦 Estoque & Saídas</button>
+            <button class="btn-classe" onclick="trocarAba('vendas', this)">💳 Caixa & Vendas</button>
+            <button class="btn-classe" onclick="trocarAba('banners', this)">🏷️ Banners</button>
+            <button class="btn-classe" onclick="trocarAba('equipe', this)">👥 Equipe</button>
+            <button class="btn-classe" onclick="trocarAba('mesas', this)">📱 QR Mesas & Impressão</button>
         </nav>
 
         <div id="feedback-toast">Ação concluída com sucesso!</div>
@@ -282,6 +282,6 @@
     </div>
 
     <!-- Script modular com importação ES6 -->
-    <script type="module" src="js/admin.js?v=1"></script>
+   <script type="module" src="js/admin.js?v=8"></script>
 </body>
 </html>
