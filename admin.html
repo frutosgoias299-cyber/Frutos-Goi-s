@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo | Frutos de Goiás</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css?v=3">
+    <style>
+        .admin-layout {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px 80px;
+        }
+
+        .card-painel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .formulario-produto {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .campo-full {
+            grid-column: span 2;
+        }
+
+        .campo-grupo {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .campo-grupo label {
+            color: #DDD;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .campo-grupo input,
+        .campo-grupo select,
+        .campo-grupo textarea {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 12px;
+            color: #FFF;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .campo-grupo input:focus,
+        .campo-grupo select:focus,
+        .campo-grupo textarea:focus {
+            outline: none;
+            border-color: var(--cor-verde, #00FF66);
+        }
+
+        .btn-salvar {
+            grid-column: span 2;
+            background: var(--cor-verde, #00FF66);
+            color: #111;
+            font-weight: 700;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-salvar:hover {
+            opacity: 0.9;
+        }
+
+        .tabela-produtos {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .tabela-produtos th,
+        .tabela-produtos td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            color: #EEE;
+            font-size: 0.9rem;
+        }
+
+        .tabela-produtos th {
+            color: #888;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .badge-status {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .status-ativo {
+            background: rgba(0, 255, 102, 0.15);
+            color: #00FF66;
+        }
+
+        .status-inativo {
+            background: rgba(255, 68, 68, 0.15);
+            color: #ff4444;
+        }
+
+        .btn-acao {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="logo-container">
+            <h1 class="logo-texto">PAINEL DO DONO</h1>
+        </div>
+        <div class="badge-delivery">
+            <span>⚙️ Gerenciamento</span>
+        </div>
+    </header>
+
+    <main class="admin-layout">
+        
+        <!-- Formulário de Cadastro -->
+        <section class="card-painel">
+            <h2 class="titulo-seccao" style="margin-bottom: 16px;">Adicionar Novo Produto</h2>
+            <form id="form-produto" class="formulario-produto">
+                <div class="campo-grupo">
+                    <label for="nome">Nome do Produto</label>
+                    <input type="text" id="nome" placeholder="Ex: Picolé de Ninho Trufado" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="categoria">Categoria</label>
+                    <select id="categoria" required>
+                        <option value="picoles">Picolés</option>
+                        <option value="gelados">Gelados / Taças</option>
+                        <option value="acai">Açaí</option>
+                        <option value="especiais">Especiais</option>
+                    </select>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="preco">Preço (R$)</label>
+                    <input type="number" step="0.50" id="preco" placeholder="Ex: 8.50" required>
+                </div>
+
+                <div class="campo-grupo">
+                    <label for="imagem_url">URL da Imagem</label>
+                    <input type="url" id="imagem_url" placeholder="https://exemplo.com/imagem.jpg">
+                </div>
+
+                <div class="campo-grupo campo-full">
+                    <label for="descricao">Descrição / Ingredientes</label>
+                    <textarea id="descricao" rows="2" placeholder="Ex: Feito com chocolate nobre e fruta fresca..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-salvar">Cadastrar Produto</button>
+            </form>
+        </section>
+
+        <!-- Listagem de Produtos Cadastrados -->
+        <section class="card-painel">
+            <h2 class="titulo-seccao" style="margin-bottom: 16px;">Produtos em Catálogo</h2>
+            <div style="overflow-x: auto;">
+                <table class="tabela-produtos">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-admin-produtos">
+                        <!-- Injetado dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Carregamento e integração local/mock até plugar na API final
+        let catalogo = JSON.parse(localStorage.getItem('produtos_banco_mock')) || [
+            { id: 1, nome: "Picolé de Kiwi", categoria: "picoles", preco: 6.00, descricao: "100% fruta natural", status: true },
+            { id: 2, nome: "Gelado Morango", categoria: "gelados", preco: 14.00, descricao: "Copo artesanal 300ml", status: true },
+            { id: 3, nome: "Açaí Tradicional", categoria: "acai", preco: 22.00, descricao: "Tigela 500ml + granola", status: true }
+        ];
+
+        function renderizarListaAdmin() {
+            const tbody = document.getElementById('lista-admin-produtos');
+            tbody.innerHTML = '';
+
+            catalogo.forEach((p, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${p.nome}</strong></td>
+                    <td>${p.categoria}</td>
+                    <td>R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</td>
+                    <td><span class="badge-status ${p.status ? 'status-ativo' : 'status-inativo'}">${p.status ? 'Ativo' : 'Esgotado'}</span></td>
+                    <td>
+                        <button class="btn-acao" onclick="alternarStatus(${index})" title="Alternar Status">🔄</button>
+                        <button class="btn-acao" onclick="removerProduto(${index})" title="Excluir">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        document.getElementById('form-produto').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const novoProduto = {
+                id: Date.now(),
+                nome: document.getElementById('nome').value,
+                categoria: document.getElementById('categoria').value,
+                preco: parseFloat(document.getElementById('preco').value),
+                imagem_url: document.getElementById('imagem_url').value,
+                descricao: document.getElementById('descricao').value,
+                status: true
+            };
+
+            catalogo.push(novoProduto);
+            localStorage.setItem('produtos_banco_mock', JSON.stringify(catalogo));
+            renderizarListaAdmin();
+            e.target.reset();
+            alert("Produto cadastrado com sucesso!");
+        });
+
+        function alternarStatus(index) {
+            catalogo[index].status = !catalogo[index].status;
+            localStorage.setItem('produtos_banco_mock', JSON.stringify(catalogo));
+            renderizarListaAdmin();
+        }
+
+        function removerProduto(index) {
+            if (confirm("Remover este produto do catálogo?")) {
+                catalogo.splice(index, 1);
+                localStorage.setItem('produtos_banco_mock', JSON.stringify(catalogo));
+                renderizarListaAdmin();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', renderizarListaAdmin);
+    </script>
+</body>
+</html>
