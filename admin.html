@@ -1,27 +1,123 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo | Frutos de Goiás</title>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/app.css?v=3">
+    <title>Painel de Gestão | Frutos de Goiás</title>
+    <!-- Tipografia Refinada -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        .admin-layout {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 0 15px 80px;
+        :root {
+            --bg-principal: #0F1110;
+            --bg-cartao: #181A19;
+            --bg-input: #121413;
+            --destaque-dourado: #E5B369;
+            --texto-principal: #FFFFFF;
+            --texto-suave: #9E9E9E;
+            --borda-fina: rgba(255, 255, 255, 0.08);
+            --verde-sucesso: #25D366;
+            --vermelho-alerta: #FF4D4D;
         }
 
-        .card-painel {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding: 24px 20px 80px;
+        }
+
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        /* Topo Executivo */
+        .topo-admin {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--borda-fina);
+            margin-bottom: 28px;
+        }
+
+        .marca-admin h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--texto-principal);
+        }
+
+        .marca-admin span {
+            font-size: 0.8rem;
+            color: var(--destaque-dourado);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .btn-link-cardapio {
+            color: var(--texto-suave);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--borda-fina);
+            transition: all 0.2s ease;
+        }
+
+        .btn-link-cardapio:hover {
+            color: var(--texto-principal);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Bloco de Notificação */
+        .alerta-feedback {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alerta-sucesso {
+            background: rgba(37, 211, 102, 0.1);
+            color: var(--verde-sucesso);
+            border: 1px solid rgba(37, 211, 102, 0.25);
+        }
+
+        .alerta-erro {
+            background: rgba(255, 77, 77, 0.1);
+            color: var(--vermelho-alerta);
+            border: 1px solid rgba(255, 77, 77, 0.25);
+        }
+
+        /* Painel / Card Base */
+        .painel-secao {
+            background: var(--bg-cartao);
+            border: 1px solid var(--borda-fina);
             border-radius: 16px;
             padding: 24px;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
-        .formulario-produto {
+        .secao-titulo {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Formulário Elegante */
+        .grid-formulario {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
@@ -31,270 +127,296 @@
             grid-column: span 2;
         }
 
-        .campo-grupo {
+        .grupo-input {
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
 
-        .campo-grupo label {
-            color: #DDD;
-            font-size: 0.9rem;
-            font-weight: 600;
+        .grupo-input label {
+            font-size: 0.8rem;
+            color: var(--texto-suave);
+            font-weight: 500;
         }
 
-        .campo-grupo input,
-        .campo-grupo select,
-        .campo-grupo textarea {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+        .grupo-input input,
+        .grupo-input select,
+        .grupo-input textarea {
+            background: var(--bg-input);
+            border: 1px solid var(--borda-fina);
             border-radius: 8px;
-            padding: 12px;
-            color: #FFF;
-            font-size: 0.95rem;
+            padding: 12px 14px;
+            color: var(--texto-principal);
             font-family: inherit;
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease;
         }
 
-        .campo-grupo input:focus,
-        .campo-grupo select:focus,
-        .campo-grupo textarea:focus {
+        .grupo-input input:focus,
+        .grupo-input select:focus,
+        .grupo-input textarea:focus {
             outline: none;
-            border-color: var(--cor-verde, #00FF66);
+            border-color: var(--destaque-dourado);
         }
 
-        .btn-salvar {
+        .btn-principal {
             grid-column: span 2;
-            background: var(--cor-verde, #00FF66);
+            background: var(--destaque-dourado);
             color: #111;
-            font-weight: 700;
+            border: none;
             padding: 14px;
             border-radius: 10px;
-            border: none;
+            font-weight: 600;
+            font-size: 0.95rem;
             cursor: pointer;
-            font-size: 1rem;
-            transition: opacity 0.2s;
+            transition: opacity 0.2s ease;
+            margin-top: 6px;
         }
 
-        .btn-salvar:hover {
+        .btn-principal:hover {
             opacity: 0.9;
         }
 
-        .btn-salvar:disabled {
+        .btn-principal:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
 
-        .tabela-produtos {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
+        /* Lista de Itens no Catálogo */
+        .lista-produtos {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .tabela-produtos th,
-        .tabela-produtos td {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            color: #EEE;
-            font-size: 0.9rem;
+        .item-linha {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-input);
+            border: 1px solid var(--borda-fina);
+            padding: 14px 16px;
+            border-radius: 12px;
+            gap: 12px;
         }
 
-        .tabela-produtos th {
-            color: #888;
-            font-size: 0.8rem;
-            text-transform: uppercase;
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            flex-grow: 1;
+        }
+
+        .item-nome {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .item-sub {
+            font-size: 0.78rem;
+            color: var(--texto-suave);
+        }
+
+        .item-acoes {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .badge-status {
-            padding: 4px 8px;
-            border-radius: 6px;
+            padding: 5px 10px;
+            border-radius: 20px;
             font-size: 0.75rem;
-            font-weight: bold;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.2s ease;
         }
 
         .status-ativo {
-            background: rgba(0, 255, 102, 0.15);
-            color: #00FF66;
+            background: rgba(37, 211, 102, 0.12);
+            color: var(--verde-sucesso);
         }
 
-        .status-inativo {
-            background: rgba(255, 68, 68, 0.15);
-            color: #ff4444;
+        .status-esgotado {
+            background: rgba(255, 77, 77, 0.12);
+            color: var(--vermelho-alerta);
         }
 
-        .btn-acao {
+        .btn-excluir {
             background: transparent;
-            border: none;
+            border: 1px solid var(--borda-fina);
+            color: var(--texto-suave);
+            padding: 6px 10px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 1rem;
-            padding: 4px;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
         }
 
-        .msg-alerta {
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-            display: none;
+        .btn-excluir:hover {
+            border-color: var(--vermelho-alerta);
+            color: var(--vermelho-alerta);
         }
-        .msg-sucesso {
-            background: rgba(0, 255, 102, 0.15);
-            color: #00FF66;
-            border: 1px solid rgba(0, 255, 102, 0.3);
+
+        .estado-vazio {
+            text-align: center;
+            color: var(--texto-suave);
+            padding: 30px 0;
+            font-size: 0.9rem;
         }
-        .msg-erro {
-            background: rgba(255, 68, 68, 0.15);
-            color: #ff4444;
-            border: 1px solid rgba(255, 68, 68, 0.3);
+
+        @media (max-width: 600px) {
+            .grid-formulario {
+                grid-template-columns: 1fr;
+            }
+            .campo-full {
+                grid-column: span 1;
+            }
+            .btn-principal {
+                grid-column: span 1;
+            }
+            .item-linha {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .item-acoes {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 6px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <header class="app-header">
-        <div class="logo-container">
-            <h1 class="logo-texto">PAINEL DO DONO</h1>
-        </div>
-        <div class="badge-delivery">
-            <span>⚙️ Gerenciamento</span>
-        </div>
-    </header>
-
-    <main class="admin-layout">
+    <div class="container">
         
-        <div id="alerta-status" class="msg-alerta"></div>
+        <header class="topo-admin">
+            <div class="marca-admin">
+                <h1>Frutos de Goiás</h1>
+                <span>Painel de Gestão</span>
+            </div>
+            <a href="cardapio.html" target="_blank" class="btn-link-cardapio">Visualizar Cardápio ↗</a>
+        </header>
 
-        <!-- Formulário de Cadastro -->
-        <section class="card-painel">
-            <h2 class="titulo-seccao" style="margin-bottom: 16px;">Adicionar Novo Produto</h2>
-            <form id="form-produto" class="formulario-produto">
-                <div class="campo-grupo">
+        <div id="alerta-feedback" class="alerta-feedback"></div>
+
+        <!-- Seção: Novo Produto -->
+        <section class="painel-secao">
+            <h2 class="secao-titulo">Cadastrar Produto</h2>
+            <form id="form-cadastro" class="grid-formulario">
+                
+                <div class="grupo-input">
                     <label for="nome">Nome do Produto</label>
-                    <input type="text" id="nome" placeholder="Ex: Picolé de Ninho Trufado" required>
+                    <input type="text" id="nome" placeholder="Ex: Picolé Ninho Trufado" required>
                 </div>
 
-                <div class="campo-grupo">
+                <div class="grupo-input">
                     <label for="categoria">Categoria</label>
                     <select id="categoria" required>
                         <option value="picoles">Picolés</option>
-                        <option value="gelados">Gelados / Taças</option>
+                        <option value="gelados">Taças & Gelados</option>
                         <option value="acai">Açaí</option>
                         <option value="especiais">Especiais</option>
                     </select>
                 </div>
 
-                <div class="campo-grupo">
+                <div class="grupo-input">
                     <label for="preco">Preço (R$)</label>
                     <input type="number" step="0.50" id="preco" placeholder="Ex: 8.50" required>
                 </div>
 
-                <div class="campo-grupo">
-                    <label for="imagem_url">URL da Imagem</label>
-                    <input type="url" id="imagem_url" placeholder="https://exemplo.com/imagem.jpg">
+                <div class="grupo-input">
+                    <label for="imagem_url">URL da Fotografia</label>
+                    <input type="url" id="imagem_url" placeholder="https://exemplo.com/foto.jpg">
                 </div>
 
-                <div class="campo-grupo campo-full">
-                    <label for="descricao">Descrição / Ingredientes</label>
-                    <textarea id="descricao" rows="2" placeholder="Ex: Feito com fruta fresca e ingredientes selecionados..."></textarea>
+                <div class="grupo-input campo-full">
+                    <label for="descricao">Descrição Breve / Ingredientes</label>
+                    <textarea id="descricao" rows="2" placeholder="Ex: 100% fruta natural, sem conservantes..."></textarea>
                 </div>
 
-                <button type="submit" id="btn-submit-salvar" class="btn-salvar">Cadastrar Produto</button>
+                <button type="submit" id="btn-submit" class="btn-principal">Salvar no Catálogo</button>
             </form>
         </section>
 
-        <!-- Listagem de Produtos Cadastrados -->
-        <section class="card-painel">
-            <h2 class="titulo-seccao" style="margin-bottom: 16px;">Produtos em Catálogo</h2>
-            <div style="overflow-x: auto;">
-                <table class="tabela-produtos">
-                    <thead>
-                        <tr>
-                            <th>Produto</th>
-                            <th>Categoria</th>
-                            <th>Preço</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lista-admin-produtos">
-                        <tr>
-                            <td colspan="5" style="text-align: center; color: #888;">Carregando produtos...</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <!-- Seção: Catálogo Atual -->
+        <section class="painel-secao">
+            <h2 class="secao-titulo">Itens Ativos no Cardápio</h2>
+            <div class="lista-produtos" id="lista-produtos">
+                <div class="estado-vazio">A carregar itens do catálogo...</div>
             </div>
         </section>
 
-    </main>
+    </div>
 
     <script>
         let catalogo = [];
 
-        function mostrarMensagem(texto, tipo = 'sucesso') {
-            const alerta = document.getElementById('alerta-status');
-            alerta.innerText = texto;
-            alerta.className = `msg-alerta ${tipo === 'sucesso' ? 'msg-sucesso' : 'msg-erro'}`;
-            alerta.style.display = 'block';
-            setTimeout(() => {
-                alerta.style.display = 'none';
-            }, 4000);
+        function emitirFeedback(texto, tipo = 'sucesso') {
+            const caixa = document.getElementById('alerta-feedback');
+            caixa.innerText = texto;
+            caixa.className = `alerta-feedback ${tipo === 'sucesso' ? 'alerta-sucesso' : 'alerta-erro'}`;
+            caixa.style.display = 'block';
+            setTimeout(() => { caixa.style.display = 'none'; }, 3500);
         }
 
-        // 1. Carregar Produtos (GET /api/produtos)
-        async function carregarProdutos() {
+        // 1. Obter Catálogo
+        async function carregarCatalogo() {
             try {
-                const response = await fetch('/api/produtos');
-                if (!response.ok) throw new Error('Falha ao consultar API');
-                catalogo = await response.json();
-            } catch (error) {
-                console.warn('API não disponível, usando fallback local:', error);
+                const res = await fetch('/api/produtos');
+                if (!res.ok) throw new Error();
+                catalogo = await res.json();
+            } catch (err) {
+                // Fallback para simulação local caso a API não esteja em execução
                 catalogo = JSON.parse(localStorage.getItem('produtos_banco_mock')) || [
-                    { id: 1, nome: "Picolé de Kiwi", categoria: "picoles", preco: 6.00, descricao: "100% fruta natural", disponivel: true },
-                    { id: 2, nome: "Gelado Morango", categoria: "gelados", preco: 14.00, descricao: "Copo artesanal 300ml", disponivel: true },
-                    { id: 3, nome: "Açaí Tradicional", categoria: "acai", preco: 22.00, descricao: "Tigela 500ml + granola", disponivel: true }
+                    { id: 1, nome: "Picolé Ninho Trufado", categoria: "picoles", preco: 8.50, descricao: "Cremoso com recheio de avelã", disponivel: true },
+                    { id: 2, nome: "Picolé de Maracujá", categoria: "picoles", preco: 6.00, descricao: "100% polpa de fruta natural", disponivel: true },
+                    { id: 3, nome: "Taça Suprema de Morango", categoria: "gelados", preco: 24.00, descricao: "Gelado artesanal com calda", disponivel: true }
                 ];
             }
-            renderizarTabela();
+            renderizarItens();
         }
 
-        // 2. Renderizar Tabela
-        function renderizarTabela() {
-            const tbody = document.getElementById('lista-admin-produtos');
-            tbody.innerHTML = '';
+        // 2. Renderizar Lista
+        function renderizarItens() {
+            const container = document.getElementById('lista-produtos');
+            container.innerHTML = '';
 
             if (catalogo.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #888;">Nenhum produto cadastrado.</td></tr>';
+                container.innerHTML = '<div class="estado-vazio">Nenhum produto cadastrado no catálogo.</div>';
                 return;
             }
 
-            catalogo.forEach((p) => {
-                const tr = document.createElement('tr');
-                const estaAtivo = p.disponivel !== false;
+            catalogo.forEach((item) => {
+                const precoFormatado = parseFloat(item.preco).toFixed(2).replace('.', ',');
+                const ativo = item.disponivel !== false;
 
-                tr.innerHTML = `
-                    <td><strong>${p.nome}</strong></td>
-                    <td>${p.categoria}</td>
-                    <td>R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</td>
-                    <td>
-                        <span class="badge-status ${estaAtivo ? 'status-ativo' : 'status-inativo'}">
-                            ${estaAtivo ? 'Ativo' : 'Esgotado'}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn-acao" onclick="alternarStatus(${p.id}, ${estaAtivo})" title="Alternar Disponibilidade">🔄</button>
-                        <button class="btn-acao" onclick="removerProduto(${p.id})" title="Excluir">🗑️</button>
-                    </td>
+                const linha = document.createElement('div');
+                linha.className = 'item-linha';
+                linha.innerHTML = `
+                    <div class="item-info">
+                        <span class="item-nome">${item.nome}</span>
+                        <span class="item-sub">${item.categoria.toUpperCase()} • R$ ${precoFormatado}</span>
+                    </div>
+                    <div class="item-acoes">
+                        <button class="badge-status ${ativo ? 'status-ativo' : 'status-esgotado'}" onclick="alternarStatus(${item.id}, ${ativo})">
+                            ${ativo ? '● Disponível' : '○ Esgotado'}
+                        </button>
+                        <button class="btn-excluir" onclick="removerItem(${item.id})">Excluir</button>
+                    </div>
                 `;
-                tbody.appendChild(tr);
+                container.appendChild(linha);
             });
         }
 
-        // 3. Cadastrar Produto (POST /api/produtos)
-        document.getElementById('form-produto').addEventListener('submit', async (e) => {
+        // 3. Cadastrar Produto
+        document.getElementById('form-cadastro').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('btn-submit-salvar');
+            const btn = document.getElementById('btn-submit');
             btn.disabled = true;
-            btn.innerText = 'Salvando...';
+            btn.innerText = 'A guardar...';
 
             const payload = {
                 nome: document.getElementById('nome').value.trim(),
@@ -305,79 +427,66 @@
             };
 
             try {
-                const response = await fetch('/api/produtos', {
+                const res = await fetch('/api/produtos', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
-                if (!response.ok) throw new Error('Erro ao salvar no banco');
-                
-                const itemCriado = await response.json();
-                catalogo.push(itemCriado);
-                mostrarMensagem('Produto cadastrado no banco com sucesso!');
+                if (!res.ok) throw new Error();
+                const novo = await res.json();
+                catalogo.push(novo);
+                emitirFeedback('Produto adicionado ao catálogo com sucesso!');
             } catch (err) {
-                console.warn('Salvando localmente devido ao erro na API:', err);
-                const itemMock = { ...payload, id: Date.now(), disponivel: true };
-                catalogo.push(itemMock);
+                const novoMock = { ...payload, id: Date.now(), disponivel: true };
+                catalogo.push(novoMock);
                 localStorage.setItem('produtos_banco_mock', JSON.stringify(catalogo));
-                mostrarMensagem('Produto cadastrado localmente!', 'sucesso');
+                emitirFeedback('Produto guardado localmente!', 'sucesso');
             } finally {
-                renderizarTabela();
+                renderizarItens();
                 e.target.reset();
                 btn.disabled = false;
-                btn.innerText = 'Cadastrar Produto';
+                btn.innerText = 'Salvar no Catálogo';
             }
         });
 
-        // 4. Alternar Status (PATCH /api/produtos)
+        // 4. Alternar Disponibilidade (Disponível / Esgotado)
         async function alternarStatus(id, statusAtual) {
             const novoStatus = !statusAtual;
-
             try {
-                const response = await fetch('/api/produtos', {
+                const res = await fetch('/api/produtos', {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id, disponivel: novoStatus })
                 });
-
-                if (!response.ok) throw new Error('Falha ao atualizar status');
-                
-                const index = catalogo.findIndex(item => item.id === id);
+                if (!res.ok) throw new Error();
+                const index = catalogo.findIndex(p => p.id === id);
                 if (index !== -1) catalogo[index].disponivel = novoStatus;
-            } catch (err) {
-                console.warn('Atualizando status localmente:', err);
-                const index = catalogo.findIndex(item => item.id === id);
+            } catch (e) {
+                const index = catalogo.findIndex(p => p.id === id);
                 if (index !== -1) catalogo[index].disponivel = novoStatus;
                 localStorage.setItem('produtos_banco_mock', JSON.stringify(catalogo));
             }
-
-            renderizarTabela();
+            renderizarItens();
         }
 
-        // 5. Remover Produto (DELETE /api/produtos?id=X)
-        async function removerProduto(id) {
-            if (!confirm('Deseja realmente remover este produto?')) return;
+        // 5. Excluir Item
+        async function removerItem(id) {
+            if (!confirm('Deseja excluir este item do catálogo?')) return;
 
             try {
-                const response = await fetch(`/api/produtos?id=${id}`, {
-                    method: 'DELETE'
-                });
-
-                if (!response.ok) throw new Error('Falha ao excluir produto');
-                catalogo = catalogo.filter(item => item.id !== id);
-                mostrarMensagem('Produto removido com sucesso!');
-            } catch (err) {
-                console.warn('Removendo localmente:', err);
-                catalogo = catalogo.filter(item => item.id !== id);
+                const res = await fetch(`/api/produtos?id=${id}`, { method: 'DELETE' });
+                if (!res.ok) throw new Error();
+                catalogo = catalogo.filter(p => p.id !== id);
+                emitirFeedback('Item removido com sucesso!');
+            } catch (e) {
+                catalogo = catalogo.filter(p => p.id !== id);
                 localStorage.setItem('produtos_banco_mock', JSON.stringify(catalogo));
-                mostrarMensagem('Produto removido localmente!', 'sucesso');
+                emitirFeedback('Item removido localmente!', 'sucesso');
             }
-
-            renderizarTabela();
+            renderizarItens();
         }
 
-        document.addEventListener('DOMContentLoaded', carregarProdutos);
+        document.addEventListener('DOMContentLoaded', carregarCatalogo);
     </script>
 </body>
 </html>

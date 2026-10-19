@@ -1,330 +1,387 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Frutos de Goiás | Cardápio Artesanal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/app.css?v=3">
+    <!-- Tipografia refinada -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --cor-primaria: #00FF66;
-            --cor-fundo: #0d0d0d;
-            --cor-cartao: rgba(255, 255, 255, 0.04);
-            --borda-suave: rgba(255, 255, 255, 0.08);
-            --cor-texto: #FFFFFF;
-            --cor-subtexto: #A0A0A0;
+            --bg-principal: #0F1110;
+            --bg-cartao: #181A19;
+            --destaque-dourado: #E5B369;
+            --texto-principal: #FFFFFF;
+            --texto-suave: #9E9E9E;
+            --borda-fina: rgba(255, 255, 255, 0.08);
+            --verde-sucesso: #25D366;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--cor-fundo);
-            color: var(--cor-texto);
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding-bottom: 90px;
+            background-color: var(--bg-principal);
+            color: var(--texto-principal);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding-bottom: 120px;
         }
 
-        /* Banner de Identificação da Mesa */
-        .faixa-mesa {
-            background: linear-gradient(90deg, rgba(0, 255, 102, 0.15), rgba(0, 255, 102, 0.03));
-            border-bottom: 1px solid var(--borda-suave);
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            color: var(--cor-primaria);
-            font-weight: 600;
+        /* Topo Minimalista */
+        .topo-marca {
+            padding: 24px 20px 16px;
+            text-align: center;
+            border-bottom: 1px solid var(--borda-fina);
         }
 
-        /* Categorias em Pílulas Modernas */
-        .categorias-container {
+        .nome-marca {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+            color: var(--texto-principal);
+        }
+
+        .selo-mesa {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--destaque-dourado);
+            background: rgba(229, 179, 105, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        /* Categorias em Pílulas Suaves */
+        .categorias-scroll {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             overflow-x: auto;
-            padding: 16px 20px 8px;
+            padding: 16px 20px;
             scrollbar-width: none;
         }
-        .categorias-container::-webkit-scrollbar { display: none; }
+        .categorias-scroll::-webkit-scrollbar { display: none; }
 
-        .btn-filtro {
-            background: var(--cor-cartao);
-            border: 1px solid var(--borda-suave);
-            color: var(--cor-subtexto);
-            padding: 10px 18px;
-            border-radius: 50px;
-            font-size: 0.9rem;
+        .btn-categoria {
+            background: transparent;
+            border: 1px solid var(--borda-fina);
+            color: var(--texto-suave);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.85rem;
             font-weight: 500;
             white-space: nowrap;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
         }
 
-        .btn-filtro.ativo {
-            background: var(--cor-primaria);
-            color: #000;
-            font-weight: 700;
-            border-color: var(--cor-primaria);
-            box-shadow: 0 4px 14px rgba(0, 255, 102, 0.25);
+        .btn-categoria.ativo {
+            background: var(--destaque-dourado);
+            color: #111;
+            border-color: var(--destaque-dourado);
+            font-weight: 600;
         }
 
-        /* Grelha de Produtos Vitrine */
-        .grelha-produtos-dinamica {
+        /* Grelha de Vitrine */
+        .vitrine {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 16px;
-            padding: 16px 20px;
+            padding: 0 20px;
         }
 
-        .cartao-item {
-            background: var(--cor-cartao);
-            border: 1px solid var(--borda-suave);
+        .card-produto {
+            background: var(--bg-cartao);
+            border: 1px solid var(--borda-fina);
             border-radius: 16px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            transition: transform 0.15s ease;
         }
 
-        .cartao-item:active {
+        .card-produto:active {
             transform: scale(0.98);
         }
 
-        .item-preview {
+        .imagem-container {
             width: 100%;
-            height: 125px;
-            background: rgba(255, 255, 255, 0.02);
+            height: 140px;
+            background: #202422;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.8rem;
-            overflow: hidden;
         }
 
-        .item-preview img {
+        .imagem-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .item-info {
-            padding: 12px;
+        .imagem-fallback {
+            font-size: 2.2rem;
+            opacity: 0.4;
+        }
+
+        .info-produto {
+            padding: 12px 14px 14px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
         }
 
-        .item-nome {
+        .titulo-produto {
             font-size: 0.95rem;
             font-weight: 600;
-            margin: 0 0 4px 0;
-            color: var(--cor-texto);
+            margin-bottom: 4px;
+            line-height: 1.25;
         }
 
-        .item-desc {
-            font-size: 0.78rem;
-            color: var(--cor-subtexto);
-            margin: 0 0 10px 0;
+        .descricao-produto {
+            font-size: 0.75rem;
+            color: var(--texto-suave);
+            margin-bottom: 12px;
             line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .item-rodape {
+        .rodape-produto {
+            margin-top: auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: auto;
         }
 
-        .item-preco {
-            font-size: 1.05rem;
+        .preco-produto {
+            font-size: 1rem;
             font-weight: 700;
-            color: var(--cor-primaria);
+            color: var(--destaque-dourado);
         }
 
-        .btn-comprar {
-            background: rgba(0, 255, 102, 0.15);
-            color: var(--cor-primaria);
-            border: 1px solid rgba(0, 255, 102, 0.3);
+        .btn-adicionar {
+            background: rgba(229, 179, 105, 0.15);
+            color: var(--destaque-dourado);
+            border: 1px solid rgba(229, 179, 105, 0.3);
             width: 32px;
             height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            font-weight: 700;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
 
-        .btn-comprar:hover {
-            background: var(--cor-primaria);
-            color: #000;
+        .btn-adicionar:active {
+            background: var(--destaque-dourado);
+            color: #111;
+        }
+
+        /* Barra Flutuante de Pedido (Checkout Minimalista) */
+        .barra-pedido {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: #1D201E;
+            border: 1px solid rgba(229, 179, 105, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            border-radius: 16px;
+            padding: 12px 18px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+        }
+
+        .resumo-pedido {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .resumo-itens {
+            font-size: 0.8rem;
+            color: var(--texto-suave);
+        }
+
+        .resumo-valor {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--texto-principal);
+        }
+
+        .btn-concluir {
+            background: var(--verde-sucesso);
+            color: #FFF;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <!-- Faixa Informativa de Mesa -->
-    <div id="faixa-mesa" class="faixa-mesa">
-        <span id="label-mesa">📍 Atendimento: Balcão</span>
-        <span>🍦 Frutos de Goiás</span>
-    </div>
-
-    <!-- Cabeçalho -->
-    <header class="app-header">
-        <div class="logo-container">
-            <h1 class="logo-texto">CARDÁPIO DIGITAL</h1>
-        </div>
-        <div class="badge-delivery">
-            <span>✨ Artesanal</span>
-        </div>
+    <header class="topo-marca">
+        <h1 class="nome-marca">Frutos de Goiás</h1>
+        <span id="rotulo-mesa" class="selo-mesa">Mesa 01</span>
     </header>
 
-    <!-- Barra de Filtros -->
-    <nav class="categorias-container">
-        <button class="btn-filtro ativo" onclick="filtrar('todos')">Todos</button>
-        <button class="btn-filtro" onclick="filtrar('picoles')">Picolés</button>
-        <button class="btn-filtro" onclick="filtrar('gelados')">Gelados</button>
-        <button class="btn-filtro" onclick="filtrar('acai')">Açaí</button>
-        <button class="btn-filtro" onclick="filtrar('especiais')">Especiais</button>
+    <nav class="categorias-scroll">
+        <button class="btn-categoria ativo" onclick="selecionarCategoria('todos')">Todos</button>
+        <button class="btn-categoria" onclick="selecionarCategoria('picoles')">Picolés</button>
+        <button class="btn-categoria" onclick="selecionarCategoria('gelados')">Taças & Gelados</button>
+        <button class="btn-categoria" onclick="selecionarCategoria('acai')">Açaí</button>
     </nav>
 
-    <!-- Vitrine de Produtos -->
-    <main>
-        <div id="vitrine" class="grelha-produtos-dinamica">
-            <!-- Carregado via JS -->
-        </div>
+    <main class="vitrine" id="grid-vitrine">
+        <!-- Renderizado dinamicamente -->
     </main>
 
-    <!-- Barra Inferior de Navegação -->
-    <nav class="bottom-bar">
-        <a href="cardapio.html" class="nav-item ativo">
-            <span class="icone">📜</span>
-            <span>Cardápio</span>
-        </a>
-        <a href="leitor.htm" class="nav-item">
-            <span class="icone">📷</span>
-            <span>Ler QR</span>
-        </a>
-        <a href="carrinho.html" class="nav-item" style="position: relative;">
-            <span class="icone">🛒</span>
-            <span>Carrinho</span>
-            <span id="contador-carrinho" style="display: none; position: absolute; top: 2px; right: 18px; background-color: #ff4444; color: #FFF; font-size: 0.65rem; font-weight: bold; padding: 2px 5px; border-radius: 50px; min-width: 14px; text-align: center;">0</span>
-        </a>
-    </nav>
+    <!-- Barra que surge quando há itens no pedido -->
+    <div id="barra-pedido" class="barra-pedido">
+        <div class="resumo-pedido">
+            <span id="total-itens" class="resumo-itens">0 itens selecionados</span>
+            <span id="total-valor" class="resumo-valor">R$ 0,00</span>
+        </div>
+        <button class="btn-concluir" onclick="finalizarWhatsApp()">Pedir via WhatsApp</button>
+    </div>
 
     <script>
-        // 1. Identificar Mesa via Parâmetro URL (?mesa=X) ou LocalStorage
-        const urlParams = new URLSearchParams(window.location.search);
-        const mesaUrl = urlParams.get('mesa');
-        if (mesaUrl) {
-            localStorage.setItem('mesa_frutos', `Mesa ${mesaUrl}`);
+        // 1. Identificar Mesa pela URL (?mesa=03)
+        const params = new URLSearchParams(window.location.search);
+        const paramMesa = params.get('mesa');
+        if (paramMesa) {
+            localStorage.setItem('mesa_ativa', `Mesa ${paramMesa}`);
         }
-        const mesaAtual = localStorage.getItem('mesa_frutos') || 'Balcão / Delivery';
-        document.getElementById('label-mesa').innerText = `📍 ${mesaAtual}`;
+        const mesa = localStorage.getItem('mesa_ativa') || 'Balcão';
+        document.getElementById('rotulo-mesa').innerText = mesa;
 
-        // 2. Carregar Lista de Produtos da API (com fallback de segurança)
-        let produtosGlobais = [];
+        // 2. Estado de Produtos e Pedido
+        let produtos = [];
+        let pedido = {};
 
-        async function carregarCatalogo() {
+        async function carregarProdutos() {
             try {
-                const response = await fetch('/api/produtos');
-                if (response.ok) {
-                    produtosGlobais = await response.json();
-                } else {
-                    throw new Error('Falha ao carregar API');
-                }
-            } catch (err) {
-                // Fallback para itens guardados no admin ou de amostra
-                produtosGlobais = JSON.parse(localStorage.getItem('produtos_banco_mock')) || [
-                    { id: 1, nome: "Picolé de Kiwi", categoria: "picoles", preco: 6.00, descricao: "100% fruta natural", imagem_url: "", disponivel: true },
-                    { id: 2, nome: "Gelado Morango", categoria: "gelados", preco: 14.00, descricao: "Copo artesanal 300ml", imagem_url: "", disponivel: true },
-                    { id: 3, nome: "Açaí Tradicional", categoria: "acai", preco: 22.00, descricao: "Tigela 500ml + granola", imagem_url: "", disponivel: true },
-                    { id: 4, nome: "Picolé de Manga", categoria: "picoles", preco: 6.00, descricao: "Sem adição de açúcares", imagem_url: "", disponivel: true }
+                const res = await fetch('/api/produtos');
+                if (!res.ok) throw new Error();
+                produtos = await res.json();
+            } catch (e) {
+                // Catálogo base de fallback com fotos de exemplo apetitosas
+                produtos = [
+                    { id: 1, nome: "Picolé Ninho Trufado", categoria: "picoles", preco: 8.50, descricao: "Cremoso com recheio de creme de avelã", imagem_url: "https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=400&q=80" },
+                    { id: 2, nome: "Picolé de Maracujá", categoria: "picoles", preco: 6.00, descricao: "100% polpa de fruta natural", imagem_url: "https://images.unsplash.com/photo-1488900128323-21503983a07e?w=400&q=80" },
+                    { id: 3, nome: "Taça Suprema de Morango", categoria: "gelados", preco: 24.00, descricao: "Gelado artesanal, morangos e raspas de chocolate", imagem_url: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=80" },
+                    { id: 4, nome: "Tigela Açaí Puro 500ml", categoria: "acai", preco: 22.00, descricao: "Batido na consistência ideal com granola artesanal", imagem_url: "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=400&q=80" }
                 ];
             }
-            renderizarVitrine(produtosGlobais);
-            atualizarContadorCarrinho();
+            renderizarVitrine(produtos);
         }
 
-        // 3. Renderizar Produtos na Vitrine
-        function renderizarVitrine(itens) {
-            const container = document.getElementById('vitrine');
-            container.innerHTML = '';
+        function renderizarVitrine(lista) {
+            const grid = document.getElementById('grid-vitrine');
+            grid.innerHTML = '';
 
-            itens.filter(p => p.disponivel !== false).forEach(prod => {
-                const imagemHtml = prod.imagem_url 
-                    ? `<img src="${prod.imagem_url}" alt="${prod.nome}">`
-                    : `<span>🍧</span>`;
-
-                const precoFormatado = parseFloat(prod.preco).toFixed(2).replace('.', ',');
-
-                const cartao = document.createElement('div');
-                cartao.className = 'cartao-item';
-                cartao.innerHTML = `
-                    <div class="item-preview">${imagemHtml}</div>
-                    <div class="item-info">
-                        <h3 class="item-nome">${prod.nome}</h3>
-                        <p class="item-desc">${prod.descricao || 'Receita tradicional Frutos de Goiás'}</p>
-                        <div class="item-rodape">
-                            <span class="item-preco">R$ ${precoFormatado}</span>
-                            <button class="btn-comprar" onclick="adicionarAoCarrinho('${prod.nome}', '${precoFormatado}')" title="Adicionar">+</button>
+            lista.forEach(item => {
+                const precoFormatado = parseFloat(item.preco).toFixed(2).replace('.', ',');
+                const card = document.createElement('div');
+                card.className = 'card-produto';
+                card.innerHTML = `
+                    <div class="imagem-container">
+                        ${item.imagem_url ? `<img src="${item.imagem_url}" alt="${item.nome}" loading="lazy">` : `<span class="imagem-fallback">🍨</span>`}
+                    </div>
+                    <div class="info-produto">
+                        <h2 class="titulo-produto">${item.nome}</h2>
+                        <p class="descricao-produto">${item.descricao || ''}</p>
+                        <div class="rodape-produto">
+                            <span class="preco-produto">R$ ${precoFormatado}</span>
+                            <button class="btn-adicionar" onclick="adicionar(${item.id})">+</button>
                         </div>
                     </div>
                 `;
-                container.appendChild(cartao);
+                grid.appendChild(card);
             });
         }
 
-        // 4. Filtros de Categoria
-        function filtrar(categoria) {
-            document.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('ativo'));
+        function selecionarCategoria(cat) {
+            document.querySelectorAll('.btn-categoria').forEach(b => b.classList.remove('ativo'));
             event.target.classList.add('ativo');
 
-            if (categoria === 'todos') {
-                renderizarVitrine(produtosGlobais);
+            if (cat === 'todos') {
+                renderizarVitrine(produtos);
             } else {
-                const filtrados = produtosGlobais.filter(p => p.categoria.toLowerCase() === categoria.toLowerCase());
-                renderizarVitrine(filtrados);
+                renderizarVitrine(produtos.filter(p => p.categoria.toLowerCase() === cat.toLowerCase()));
             }
         }
 
-        // 5. Adicionar ao Carrinho Integrado
-        function adicionarAoCarrinho(titulo, preco) {
-            let carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
-            const index = carrinho.findIndex(item => item.titulo === titulo);
+        function adicionar(id) {
+            const item = produtos.find(p => p.id === id);
+            if (!item) return;
 
-            if (index > -1) {
-                carrinho[index].quantidade = (carrinho[index].quantidade || 1) + 1;
+            if (pedido[id]) {
+                pedido[id].qtd += 1;
             } else {
-                carrinho.push({
-                    titulo: titulo,
-                    preco: `R$ ${preco}`,
-                    quantidade: 1
-                });
+                pedido[id] = { nome: item.nome, preco: parseFloat(item.preco), qtd: 1 };
             }
-
-            localStorage.setItem('carrinho_frutos', JSON.stringify(carrinho));
-            atualizarContadorCarrinho();
+            atualizarBarraPedido();
         }
 
-        function atualizarContadorCarrinho() {
-            const carrinho = JSON.parse(localStorage.getItem('carrinho_frutos')) || [];
-            const contadorElem = document.getElementById('contador-carrinho');
-            const total = carrinho.reduce((acc, item) => acc + (item.quantidade || 1), 0);
+        function atualizarBarraPedido() {
+            const barra = document.getElementById('barra-pedido');
+            const totalItensElem = document.getElementById('total-itens');
+            const totalValorElem = document.getElementById('total-valor');
 
-            if (total > 0) {
-                contadorElem.style.display = 'inline-block';
-                contadorElem.innerText = total;
+            let qtdTotal = 0;
+            let valorTotal = 0;
+
+            Object.values(pedido).forEach(item => {
+                qtdTotal += item.qtd;
+                valorTotal += (item.preco * item.qtd);
+            });
+
+            if (qtdTotal > 0) {
+                barra.style.display = 'flex';
+                totalItensElem.innerText = `${qtdTotal} ${qtdTotal === 1 ? 'item' : 'itens'} selecionado${qtdTotal === 1 ? '' : 's'}`;
+                totalValorElem.innerText = `R$ ${valorTotal.toFixed(2).replace('.', ',')}`;
             } else {
-                contadorElem.style.display = 'none';
+                barra.style.display = 'none';
             }
         }
 
-        document.addEventListener('DOMContentLoaded', carregarCatalogo);
+        function finalizarWhatsApp() {
+            let msg = `Olá! Gostaria de fazer o seguinte pedido:%0A`;
+            msg += `📍 *${mesa}*%0A%0A`;
+
+            let valorTotal = 0;
+            Object.values(pedido).forEach(item => {
+                const sub = (item.preco * item.qtd).toFixed(2).replace('.', ',');
+                msg += `• ${item.qtd}x ${item.nome} (R$ ${sub})%0A`;
+                valorTotal += (item.preco * item.qtd);
+            });
+
+            msg += `%0A*Total: R$ ${valorTotal.toFixed(2).replace('.', ',')}*`;
+
+            const numeroWhatsApp = "5589999999999"; // Ajustar para o número do estabelecimento
+            window.open(`https://wa.me/${numeroWhatsApp}?text=${msg}`, '_blank');
+        }
+
+        document.addEventListener('DOMContentLoaded', carregarProdutos);
     </script>
 </body>
 </html>
