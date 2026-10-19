@@ -2,348 +2,278 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo | Frutos de Goiás</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Painel Executivo | Frutos de Goiás</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/admin.css?v=4">
+    <link rel="stylesheet" href="css/admin.css?v=5">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <style>
-        /* Barra de Navegação por Botões de Classe */
-        .nav-classes {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding: 8px 0 20px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            scrollbar-width: none;
-        }
-        .nav-classes::-webkit-scrollbar { display: none; }
-
-        .btn-classe {
-            background: #141715;
-            color: #9e9e9e;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-classe:hover {
-            border-color: #00FF66;
-            color: #FFF;
-        }
-
-        .btn-classe.ativa {
-            background: #00FF66;
-            color: #0B0D0C;
-            border-color: #00FF66;
-            font-weight: 700;
-            box-shadow: 0 4px 15px rgba(0, 255, 102, 0.25);
-        }
-
-        .painel-conteudo-aba {
-            display: none;
-        }
-
-        .painel-conteudo-aba.visivel {
-            display: block;
-            animation: surgirSuave 0.25s ease-out;
-        }
-
-        @keyframes surgirSuave {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Cartão de Banner Promocional */
-        .card-banner-preview {
-            position: relative;
-            height: 160px;
-            border-radius: 14px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 16px;
-            margin-bottom: 15px;
-        }
-
-        .card-banner-preview::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, transparent 20%, rgba(0, 0, 0, 0.85) 100%);
-        }
-
-        .card-banner-texto {
-            position: relative;
-            z-index: 1;
-        }
-
-        .card-banner-texto h3 {
-            font-size: 1.1rem;
-            color: #00FF66;
-            margin: 0;
-        }
-
-        .card-banner-texto p {
-            font-size: 0.8rem;
-            color: #ddd;
-            margin-top: 4px;
-        }
-
-        .alerta-estoque-critico {
-            color: #FF4D4D;
-            font-weight: bold;
-            font-size: 0.78rem;
-            padding: 2px 8px;
-            background: rgba(255, 77, 77, 0.1);
-            border-radius: 6px;
-        }
-    </style>
 </head>
 <body>
 
     <div class="container">
         
-        <header class="topo-admin">
-            <div class="marca-admin">
+        <header class="topo-executivo">
+            <div class="marca-bloco">
                 <h1>Frutos de Goiás</h1>
-                <span>Painel de Controlo</span>
+                <span>Gestão Empresarial</span>
             </div>
-            <a href="cardapio.html" target="_blank" class="btn-link-cardapio">Visualizar Cardápio ↗</a>
+            <a href="cardapio.html" target="_blank" class="btn-cardapio-atalho">Ver Cardápio ↗</a>
         </header>
 
-        <!-- Navegação por Classes (Botões Visíveis e Diretos) -->
+        <!-- Navegação por Classes -->
         <nav class="nav-classes">
-            <button class="btn-classe ativa" onclick="abrirClasse('estoque')">📦 Estoque & Saídas</button>
-            <button class="btn-classe" onclick="abrirClasse('vendas')">💳 Caixa & Vendas</button>
-            <button class="btn-classe" onclick="abrirClasse('produtos')">🍦 Cadastrar Produto</button>
-            <button class="btn-classe" onclick="abrirClasse('banners')">🏷️ Banners Promocionais</button>
-            <button class="btn-classe" onclick="abrirClasse('equipe')">👥 Equipe</button>
-            <button class="btn-classe" onclick="abrirClasse('mesas')">📱 QR Mesas & Impressão</button>
+            <button class="btn-classe ativa" data-classe="produtos">🍦 Produtos</button>
+            <button class="btn-classe" data-classe="estoque">📦 Estoque & Saídas</button>
+            <button class="btn-classe" data-classe="vendas">💳 Caixa & Vendas</button>
+            <button class="btn-classe" data-classe="banners">🏷️ Banners</button>
+            <button class="btn-classe" data-classe="equipe">👥 Equipe</button>
+            <button class="btn-classe" data-classe="mesas">📱 QR Mesas & Impressão</button>
         </nav>
 
-        <div id="alerta-feedback" class="alerta-feedback"></div>
+        <div id="feedback-toast">Ação concluída com sucesso!</div>
 
-        <!-- 1. CLASSE: CONTROLO DE ESTOQUE & SAÍDAS -->
-        <section id="aba-estoque" class="painel-conteudo-aba visivel">
-            <div class="painel-secao">
-                <h2 class="secao-titulo">Movimentação de Estoque</h2>
-                <form id="form-movimentacao" class="grid-formulario">
-                    <div class="grupo-input">
-                        <label>Produto</label>
-                        <select id="mov-produto" required></select>
-                    </div>
-                    <div class="grupo-input">
-                        <label>Tipo de Operação</label>
-                        <select id="mov-tipo" required>
-                            <option value="ENTRADA">Entrada (Reposição / Compra)</option>
-                            <option value="SAIDA">Saída (Avaria / Derretido / Perda)</option>
-                        </select>
-                    </div>
-                    <div class="grupo-input">
-                        <label>Quantidade</label>
-                        <input type="number" id="mov-qtd" min="1" placeholder="Ex: 20" required>
-                    </div>
-                    <div class="grupo-input">
-                        <label>Motivo da Operação</label>
-                        <input type="text" id="mov-motivo" placeholder="Ex: Lote novo ou Picolé derretido" required>
-                    </div>
-                    <button type="submit" class="btn-principal">Salvar Movimentação</button>
-                </form>
-            </div>
-
-            <div class="painel-secao">
-                <h2 class="secao-titulo">Estoque Atual em Loja</h2>
-                <div class="lista-produtos" id="lista-estoque"></div>
-            </div>
-        </section>
-
-        <!-- 2. CLASSE: VENDAS & CAIXA -->
-        <section id="aba-vendas" class="painel-conteudo-aba">
-            <div class="painel-secao">
-                <h2 class="secao-titulo">Registrar Venda Balcão</h2>
-                <form id="form-venda" class="grid-formulario">
-                    <div class="grupo-input">
-                        <label>Atendente</label>
-                        <select id="venda-funcionario" required></select>
-                    </div>
-                    <div class="grupo-input">
-                        <label>Mesa / Balcão</label>
-                        <input type="text" id="venda-mesa" value="Balcão" required>
-                    </div>
-                    <div class="grupo-input">
-                        <label>Selecionar Produto</label>
-                        <select id="venda-produto-select"></select>
-                    </div>
-                    <div class="grupo-input">
-                        <label>Qtd</label>
-                        <input type="number" id="venda-qtd" min="1" value="1">
-                    </div>
-                    <button type="button" class="btn-secundario" onclick="adicionarItemVenda()" style="grid-column: span 2;">+ Adicionar ao Pedido</button>
-
-                    <div class="campo-full">
-                        <ul id="itens-venda-carrinho" style="list-style: none; padding: 10px 0;"></ul>
-                        <div style="font-size: 1.25rem; font-weight: bold; color: #00FF66; margin: 10px 0;">
-                            Total: R$ <span id="venda-total-acumulado">0,00</span>
+        <!-- CLASSE 1: PRODUTOS -->
+        <section id="classe-produtos" class="painel-secao ativa">
+            <div class="card-bloco">
+                <h2 class="card-titulo">Cadastrar Produto</h2>
+                <form id="form-cad-produto" class="form-grid">
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px;">
+                        <div class="campo-grupo">
+                            <label>Código</label>
+                            <input type="text" id="prod-codigo" class="campo-input" placeholder="#01">
+                        </div>
+                        <div class="campo-grupo">
+                            <label>Nome do Produto</label>
+                            <input type="text" id="prod-nome" class="campo-input" placeholder="Ex: Picolé Ninho" required>
                         </div>
                     </div>
 
-                    <div class="grupo-input campo-full">
-                        <label>Forma de Pagamento</label>
-                        <select id="venda-pagamento" required>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="campo-grupo">
+                            <label>Categoria</label>
+                            <select id="prod-categoria" class="campo-select" required>
+                                <option value="picoles">Picolés</option>
+                                <option value="gelados">Taças & Gelados</option>
+                                <option value="acai">Açaí</option>
+                                <option value="especiais">Especiais</option>
+                            </select>
+                        </div>
+                        <div class="campo-grupo">
+                            <label>Preço (R$)</label>
+                            <input type="number" step="0.50" id="prod-preco" class="campo-input" placeholder="8.50" required>
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label>Foto do Produto (Galeria ou Câmera)</label>
+                        <div class="upload-area">
+                            <input type="file" id="prod-arquivo-foto" class="upload-input-file" accept="image/*">
+                            <div style="color: var(--texto-suave); font-size: 0.85rem;">
+                                📸 Toque para escolher da galeria ou tirar foto
+                            </div>
+                            <img id="preview-prod-img" class="preview-imagem" alt="Pré-visualização">
+                            <input type="hidden" id="prod-foto-base64">
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label>Descrição</label>
+                        <textarea id="prod-descricao" class="campo-textarea" rows="2" placeholder="Detalhes dos ingredientes ou sabor..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-salvar">Salvar no Catálogo</button>
+                </form>
+            </div>
+
+            <div class="card-bloco">
+                <h2 class="card-titulo">Catálogo Atual</h2>
+                <div id="lista-produtos-geral"></div>
+            </div>
+        </section>
+
+        <!-- CLASSE 2: ESTOQUE & SAÍDAS -->
+        <section id="classe-estoque" class="painel-secao">
+            <div class="card-bloco">
+                <h2 class="card-titulo">Lançar Movimentação</h2>
+                <form id="form-movimentacao" class="form-grid">
+                    <div class="campo-grupo">
+                        <label>Produto</label>
+                        <select id="mov-produto" class="campo-select" required></select>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="campo-grupo">
+                            <label>Tipo</label>
+                            <select id="mov-tipo" class="campo-select" required>
+                                <option value="ENTRADA">Entrada (Reposição)</option>
+                                <option value="SAIDA">Saída (Perda/Avaria)</option>
+                            </select>
+                        </div>
+                        <div class="campo-grupo">
+                            <label>Quantidade</label>
+                            <input type="number" id="mov-qtd" class="campo-input" min="1" placeholder="Ex: 10" required>
+                        </div>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Motivo</label>
+                        <input type="text" id="mov-motivo" class="campo-input" placeholder="Ex: Lote recebido ou Derretimento" required>
+                    </div>
+                    <button type="submit" class="btn-salvar">Atualizar Estoque</button>
+                </form>
+            </div>
+
+            <div class="card-bloco">
+                <h2 class="card-titulo">Posição de Estoque</h2>
+                <div id="lista-estoque-geral"></div>
+            </div>
+        </section>
+
+        <!-- CLASSE 3: CAIXA & VENDAS -->
+        <section id="classe-vendas" class="painel-secao">
+            <div class="card-bloco">
+                <h2 class="card-titulo">Venda Balcão / Mesa</h2>
+                <div class="form-grid">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="campo-grupo">
+                            <label>Atendente</label>
+                            <select id="venda-funcionario" class="campo-select"></select>
+                        </div>
+                        <div class="campo-grupo">
+                            <label>Mesa / Balcão</label>
+                            <input type="text" id="venda-mesa" class="campo-input" value="Balcão">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                        <div class="campo-grupo">
+                            <label>Item</label>
+                            <select id="venda-item-select" class="campo-select"></select>
+                        </div>
+                        <div class="campo-grupo">
+                            <label>Qtd</label>
+                            <input type="number" id="venda-item-qtd" class="campo-input" value="1" min="1">
+                        </div>
+                    </div>
+
+                    <button type="button" id="btn-add-caixa" class="btn-secundario">+ Adicionar Item</button>
+
+                    <div style="background: #171c19; padding: 12px; border-radius: 10px; margin-top: 6px;">
+                        <div id="caixa-itens-lista" style="font-size: 0.85rem; color: #ddd; min-height: 24px;">Nenhum item adicionado.</div>
+                        <div style="margin-top: 10px; font-size: 1.15rem; font-weight: 700; color: var(--verde-oficial);">
+                            Total: R$ <span id="caixa-total-exibicao">0,00</span>
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label>Pagamento</label>
+                        <select id="venda-forma-pgto" class="campo-select">
                             <option value="PIX">PIX</option>
                             <option value="CARTAO_DEBITO">Cartão de Débito</option>
                             <option value="CARTAO_CREDITO">Cartão de Crédito</option>
                             <option value="DINHEIRO">Dinheiro</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn-principal">Concluir Venda & Baixar Estoque</button>
-                </form>
-            </div>
-        </section>
 
-        <!-- 3. CLASSE: CADASTRAR PRODUTO -->
-        <section id="aba-produtos" class="painel-conteudo-aba">
-            <div class="painel-secao">
-                <h2 class="secao-titulo">Cadastrar Novo Produto</h2>
-                <form id="form-cadastro" class="grid-formulario">
-                    <div class="grupo-input">
-                        <label>Código Curto</label>
-                        <input type="text" id="codigo" placeholder="Ex: #01 (automático se vazio)">
-                    </div>
-                    <div class="grupo-input">
-                        <label>Nome do Produto</label>
-                        <input type="text" id="nome" required>
-                    </div>
-                    <div class="grupo-input">
-                        <label>Categoria</label>
-                        <select id="categoria" required>
-                            <option value="picoles">Picolés</option>
-                            <option value="gelados">Taças & Gelados</option>
-                            <option value="acai">Açaí</option>
-                            <option value="especiais">Especiais</option>
-                        </select>
-                    </div>
-                    <div class="grupo-input">
-                        <label>Preço (R$)</label>
-                        <input type="number" step="0.50" id="preco" required>
-                    </div>
-                    <div class="grupo-input campo-full">
-                        <label>URL da Fotografia</label>
-                        <input type="url" id="imagem_url" placeholder="https://exemplo.com/foto.jpg">
-                    </div>
-                    <div class="grupo-input campo-full">
-                        <label>Descrição</label>
-                        <textarea id="descricao" rows="2"></textarea>
-                    </div>
-                    <button type="submit" class="btn-principal">Salvar no Catálogo</button>
-                </form>
-            </div>
-
-            <div class="painel-secao">
-                <h2 class="secao-titulo">Produtos no Sistema</h2>
-                <div class="lista-produtos" id="lista-produtos"></div>
-            </div>
-        </section>
-
-        <!-- 4. CLASSE: BANNERS PROMOCIONAIS -->
-        <section id="aba-banners" class="painel-conteudo-aba">
-            <div class="painel-secao">
-                <h2 class="secao-titulo">Criar Banner Promocional</h2>
-                <form id="form-banner" class="grid-formulario">
-                    <div class="grupo-input">
-                        <label>Título do Banner</label>
-                        <input type="text" id="banner-titulo" placeholder="Ex: Festival de Taças" required>
-                    </div>
-                    <div class="grupo-input">
-                        <label>Subtítulo / Promoção</label>
-                        <input type="text" id="banner-subtitulo" placeholder="Ex: Na compra de 2 ganhe 1 cobertura">
-                    </div>
-                    <div class="grupo-input campo-full">
-                        <label>URL da Imagem do Banner</label>
-                        <input type="url" id="banner-imagem" placeholder="https://exemplo.com/banner-promocional.jpg" required>
-                    </div>
-                    <div class="grupo-input campo-full">
-                        <label>Link de Destino / Ação (Opcional)</label>
-                        <input type="text" id="banner-link" placeholder="#gelados ou cardapio.html">
-                    </div>
-                    <button type="submit" class="btn-principal">Publicar Banner</button>
-                </form>
-            </div>
-
-            <div class="painel-secao">
-                <h2 class="secao-titulo">Banners Ativos</h2>
-                <div id="lista-banners"></div>
-            </div>
-        </section>
-
-        <!-- 5. CLASSE: CONTROLO DE EQUIPE -->
-        <section id="aba-equipe" class="painel-conteudo-aba">
-            <div class="painel-secao">
-                <h2 class="secao-titulo">Cadastrar Colaborador</h2>
-                <form id="form-equipe" class="grid-formulario">
-                    <div class="grupo-input">
-                        <label>Nome Completo</label>
-                        <input type="text" id="eq-nome" required>
-                    </div>
-                    <div class="grupo-input">
-                        <label>Cargo</label>
-                        <select id="eq-cargo">
-                            <option value="Atendente">Atendente</option>
-                            <option value="Caixa">Caixa</option>
-                            <option value="Gerente">Gerente</option>
-                        </select>
-                    </div>
-                    <div class="grupo-input campo-full">
-                        <label>Chave de Acesso / PIN (4 dígitos)</label>
-                        <input type="text" id="eq-chave" placeholder="Ex: 2026" required>
-                    </div>
-                    <button type="submit" class="btn-principal">Cadastrar Membro</button>
-                </form>
-            </div>
-            <div class="painel-secao">
-                <h2 class="secao-titulo">Colaboradores Cadastrados</h2>
-                <div class="lista-produtos" id="lista-equipe"></div>
-            </div>
-        </section>
-
-        <!-- 6. CLASSE: QR MESAS & IMPRESSÃO -->
-        <section id="aba-mesas" class="painel-conteudo-aba">
-            <div class="painel-secao">
-                <h2 class="secao-titulo">Impressão e Mesas Físicas</h2>
-                <button class="btn-principal" onclick="abrirCardapioImpressao()" style="margin-bottom: 20px;">📄 Imprimir Cardápio de Mesa (Formato A4)</button>
-                
-                <h3 style="font-size: 1rem; color: #00FF66; margin-bottom: 12px;">Gerador de QR Code de Mesa</h3>
-                <div class="grid-formulario">
-                    <div class="grupo-input">
-                        <label>Número da Mesa</label>
-                        <input type="number" id="num-mesa" value="1" min="1" max="50">
-                    </div>
-                    <div class="grupo-input">
-                        <label>URL Base da Loja</label>
-                        <input type="text" id="url-base-qr">
-                    </div>
-                    <button type="button" class="btn-secundario" onclick="gerarQRCodeMesa()" style="grid-column: span 2;">Gerar Placa da Mesa</button>
+                    <button type="button" id="btn-fechar-venda" class="btn-salvar">Concluir Venda</button>
                 </div>
-                <div id="resultado-qr" style="display:none; text-align:center; margin-top:20px;">
-                    <div id="qrcode-preview" style="background:#fff; padding:10px; display:inline-block; border-radius:8px;"></div>
-                    <div style="margin-top:10px;">
-                        <button class="btn-secundario" onclick="imprimirAdesivoMesa()">🖨️ Imprimir Placa</button>
+            </div>
+        </section>
+
+        <!-- CLASSE 4: BANNERS -->
+        <section id="classe-banners" class="painel-secao">
+            <div class="card-bloco">
+                <h2 class="card-titulo">Criar Banner Promocional</h2>
+                <form id="form-cad-banner" class="form-grid">
+                    <div class="campo-grupo">
+                        <label>Título em Destaque</label>
+                        <input type="text" id="banner-titulo" class="campo-input" placeholder="Ex: Festival de Verão" required>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Subtítulo / Descrição da Oferta</label>
+                        <input type="text" id="banner-subtitulo" class="campo-input" placeholder="Ex: Na compra de 2 ganhe 1 cobertura">
+                    </div>
+
+                    <div class="campo-grupo">
+                        <label>Foto do Banner (Galeria ou Câmera)</label>
+                        <div class="upload-area">
+                            <input type="file" id="banner-arquivo-foto" class="upload-input-file" accept="image/*">
+                            <div style="color: var(--texto-suave); font-size: 0.85rem;">
+                                🖼️ Toque para selecionar a arte ou foto
+                            </div>
+                            <img id="preview-banner-img" class="preview-imagem" alt="Pré-visualização do Banner">
+                            <input type="hidden" id="banner-foto-base64">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-salvar">Publicar Banner</button>
+                </form>
+            </div>
+
+            <div class="card-bloco">
+                <h2 class="card-titulo">Banners Ativos</h2>
+                <div id="lista-banners-geral"></div>
+            </div>
+        </section>
+
+        <!-- CLASSE 5: EQUIPE -->
+        <section id="classe-equipe" class="painel-secao">
+            <div class="card-bloco">
+                <h2 class="card-titulo">Cadastrar Membro</h2>
+                <form id="form-cad-equipe" class="form-grid">
+                    <div class="campo-grupo">
+                        <label>Nome Completo</label>
+                        <input type="text" id="eq-nome" class="campo-input" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="campo-grupo">
+                            <label>Função</label>
+                            <select id="eq-cargo" class="campo-select">
+                                <option value="Atendente">Atendente</option>
+                                <option value="Caixa">Caixa</option>
+                                <option value="Gerente">Gerente</option>
+                            </select>
+                        </div>
+                        <div class="campo-grupo">
+                            <label>PIN de Acesso</label>
+                            <input type="text" id="eq-pin" class="campo-input" placeholder="Ex: 1234" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-salvar">Adicionar Colaborador</button>
+                </form>
+            </div>
+
+            <div class="card-bloco">
+                <h2 class="card-titulo">Equipe Cadastrada</h2>
+                <div id="lista-equipe-geral"></div>
+            </div>
+        </section>
+
+        <!-- CLASSE 6: MESAS, QR CODE & IMPRESSÃO -->
+        <section id="classe-mesas" class="painel-secao">
+            <div class="card-bloco">
+                <h2 class="card-titulo">Cardápio de Mesa</h2>
+                <button id="btn-imprimir-a4" class="btn-salvar" style="width: 100%; margin-bottom: 20px;">📄 Imprimir Cardápio Elegante (A4)</button>
+
+                <h3 style="font-size: 0.9rem; color: var(--verde-oficial); margin-bottom: 10px;">Gerador de Placa com QR Code</h3>
+                <div class="form-grid">
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px;">
+                        <div class="campo-grupo">
+                            <label>Mesa nº</label>
+                            <input type="number" id="num-mesa-qr" class="campo-input" value="1" min="1" max="50">
+                        </div>
+                        <div class="campo-grupo">
+                            <label>URL Base</label>
+                            <input type="text" id="url-base-input" class="campo-input">
+                        </div>
+                    </div>
+                    <button type="button" id="btn-gerar-placa" class="btn-secundario">Gerar Placa</button>
+                </div>
+
+                <div id="bloco-resultado-qr" style="display: none; text-align: center; margin-top: 20px; background: #161b18; padding: 16px; border-radius: 12px;">
+                    <div id="qrcode-container" style="background: #fff; padding: 12px; display: inline-block; border-radius: 8px;"></div>
+                    <div style="margin-top: 14px;">
+                        <button type="button" id="btn-imprimir-adesivo" class="btn-secundario">🖨️ Imprimir Placa da Mesa</button>
                     </div>
                 </div>
             </div>
@@ -351,388 +281,7 @@
 
     </div>
 
-    <script>
-        let catalogo = [];
-        let equipe = [];
-        let banners = [];
-        let itensVendaAtual = [];
-
-        document.getElementById('url-base-qr').value = window.location.href.replace('admin.html', 'cardapio.html');
-
-        // Alternar visualização pelas classes/botões
-        function abrirClasse(idClasse) {
-            document.querySelectorAll('.btn-classe').forEach(b => b.classList.remove('ativa'));
-            document.querySelectorAll('.painel-conteudo-aba').forEach(s => s.classList.remove('visivel'));
-            
-            event.currentTarget.classList.add('ativa');
-            document.getElementById(`aba-${idClasse}`).classList.add('visivel');
-        }
-
-        function emitirFeedback(texto, tipo = 'sucesso') {
-            const caixa = document.getElementById('alerta-feedback');
-            caixa.innerText = texto;
-            caixa.className = `alerta-feedback ${tipo === 'sucesso' ? 'alerta-sucesso' : 'alerta-erro'}`;
-            caixa.style.display = 'block';
-            setTimeout(() => { caixa.style.display = 'none'; }, 3500);
-        }
-
-        async function inicializarPainel() {
-            await Promise.all([carregarCatalogo(), carregarEquipe(), carregarBanners()]);
-            popularSelects();
-        }
-
-        async function carregarCatalogo() {
-            try {
-                const res = await fetch('/api/produtos');
-                if (res.ok) catalogo = await res.json();
-            } catch (e) {
-                catalogo = JSON.parse(localStorage.getItem('produtos_banco_mock')) || [];
-            }
-            renderizarListas();
-        }
-
-        async function carregarEquipe() {
-            try {
-                const res = await fetch('/api/funcionarios');
-                if (res.ok) equipe = await res.json();
-            } catch (e) {
-                equipe = [{ id: 1, nome: "Dono", cargo: "Gerente" }];
-            }
-            renderizarEquipe();
-        }
-
-        async function carregarBanners() {
-            try {
-                const res = await fetch('/api/banners');
-                if (res.ok) banners = await res.json();
-            } catch (e) {
-                banners = [];
-            }
-            renderizarBanners();
-        }
-
-        function popularSelects() {
-            const selProdMov = document.getElementById('mov-produto');
-            const selProdVenda = document.getElementById('venda-produto-select');
-            const selFunc = document.getElementById('venda-funcionario');
-
-            selProdMov.innerHTML = catalogo.map(p => `<option value="${p.id}">${p.codigo || ''} ${p.nome} (Atual: ${p.estoque || 0})</option>`).join('');
-            selProdVenda.innerHTML = catalogo.map(p => `<option value="${p.id}">${p.nome} - R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</option>`).join('');
-            selFunc.innerHTML = equipe.map(f => `<option value="${f.id}">${f.nome} (${f.cargo})</option>`).join('');
-        }
-
-        function renderizarListas() {
-            // Produtos no catálogo
-            document.getElementById('lista-produtos').innerHTML = catalogo.map(p => `
-                <div class="item-linha">
-                    <div class="item-info">
-                        <span class="item-nome"><strong>${p.codigo || ''}</strong> ${p.nome}</span>
-                        <span class="item-sub">${p.categoria.toUpperCase()} • R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</span>
-                    </div>
-                    <div class="item-acoes">
-                        <button class="btn-excluir" onclick="removerItem(${p.id})">Excluir</button>
-                    </div>
-                </div>
-            `).join('');
-
-            // Estoque atual
-            document.getElementById('lista-estoque').innerHTML = catalogo.map(p => {
-                const qtd = p.estoque || 0;
-                const alerta = qtd <= (p.estoque_minimo || 5) ? '<span class="alerta-estoque-critico">⚠️ Reposição Urgente</span>' : '';
-                return `
-                    <div class="item-linha">
-                        <div class="item-info">
-                            <span class="item-nome">${p.codigo || ''} ${p.nome}</span>
-                            <span class="item-sub">Estoque Físico: <strong>${qtd} un</strong> ${alerta}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderizarEquipe() {
-            document.getElementById('lista-equipe').innerHTML = equipe.map(f => `
-                <div class="item-linha">
-                    <div class="item-info">
-                        <span class="item-nome">${f.nome}</span>
-                        <span class="item-sub">${f.cargo}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderizarBanners() {
-            const container = document.getElementById('lista-banners');
-            if (banners.length === 0) {
-                container.innerHTML = '<div class="estado-vazio">Nenhum banner ativo.</div>';
-                return;
-            }
-            container.innerHTML = banners.map(b => `
-                <div class="card-banner-preview" style="background-image: url('${b.imagem_url}');">
-                    <div class="card-banner-texto">
-                        <h3>${b.titulo}</h3>
-                        <p>${b.subtitulo || ''}</p>
-                    </div>
-                </div>
-                <button class="btn-excluir" onclick="removerBanner(${b.id})" style="margin-bottom: 20px;">Remover Banner</button>
-            `).join('');
-        }
-
-        // Submissão do Banner
-        document.getElementById('form-banner').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const payload = {
-                titulo: document.getElementById('banner-titulo').value.trim(),
-                subtitulo: document.getElementById('banner-subtitulo').value.trim(),
-                imagem_url: document.getElementById('banner-imagem').value.trim(),
-                link_destino: document.getElementById('banner-link').value.trim()
-            };
-
-            const res = await fetch('/api/banners', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (res.ok) {
-                emitirFeedback('Banner publicado com sucesso!');
-                e.target.reset();
-                await carregarBanners();
-            } else {
-                emitirFeedback('Erro ao criar banner', 'erro');
-            }
-        });
-
-        async function removerBanner(id) {
-            if (!confirm('Deseja remover este banner?')) return;
-            const res = await fetch(`/api/banners?id=${id}`, { method: 'DELETE' });
-            if (res.ok) {
-                emitirFeedback('Banner removido');
-                await carregarBanners();
-            }
-        }
-
-        // Movimentação de estoque
-        document.getElementById('form-movimentacao').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const payload = {
-                produto_id: document.getElementById('mov-produto').value,
-                tipo: document.getElementById('mov-tipo').value,
-                quantidade: document.getElementById('mov-qtd').value,
-                motivo: document.getElementById('mov-motivo').value
-            };
-
-            const res = await fetch('/api/estoque/movimentacao', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (res.ok) {
-                emitirFeedback('Movimentação guardada com sucesso!');
-                e.target.reset();
-                await carregarCatalogo();
-                popularSelects();
-            }
-        });
-
-        // Vendas Balcão
-        function adicionarItemVenda() {
-            const pId = parseInt(document.getElementById('venda-produto-select').value, 10);
-            const qtd = parseInt(document.getElementById('venda-qtd').value, 10);
-            const prod = catalogo.find(p => p.id === pId);
-            if (!prod || qtd <= 0) return;
-            itensVendaAtual.push({ id: prod.id, nome: prod.nome, preco: parseFloat(prod.preco), qtd });
-            atualizarCarrinhoVenda();
-        }
-
-        function atualizarCarrinhoVenda() {
-            const container = document.getElementById('itens-venda-carrinho');
-            let total = 0;
-            container.innerHTML = itensVendaAtual.map((item, idx) => {
-                const sub = item.preco * item.qtd;
-                total += sub;
-                return `<li style="padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem;">
-                    ${item.qtd}x ${item.nome} - R$ ${sub.toFixed(2).replace('.', ',')}
-                    <button type="button" onclick="itensVendaAtual.splice(${idx},1); atualizarCarrinhoVenda();" style="color:red; background:none; border:none; cursor:pointer; margin-left:10px;">✕</button>
-                </li>`;
-            }).join('');
-            document.getElementById('venda-total-acumulado').innerText = total.toFixed(2).replace('.', ',');
-        }
-
-        document.getElementById('form-venda').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (itensVendaAtual.length === 0) return alert('Adicione produtos à venda.');
-
-            let total = itensVendaAtual.reduce((acc, i) => acc + (i.preco * i.qtd), 0);
-            const payload = {
-                funcionario_id: document.getElementById('venda-funcionario').value,
-                mesa: document.getElementById('venda-mesa').value,
-                forma_pagamento: document.getElementById('venda-pagamento').value,
-                itens: itensVendaAtual,
-                valor_total: total
-            };
-
-            const res = await fetch('/api/vendas', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (res.ok) {
-                emitirFeedback('Venda concluída com sucesso!');
-                itensVendaAtual = [];
-                atualizarCarrinhoVenda();
-                e.target.reset();
-                await carregarCatalogo();
-                popularSelects();
-            }
-        });
-
-        // Cadastro de Produto
-        document.getElementById('form-cadastro').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const payload = {
-                codigo: document.getElementById('codigo').value.trim() || undefined,
-                nome: document.getElementById('nome').value.trim(),
-                categoria: document.getElementById('categoria').value,
-                preco: parseFloat(document.getElementById('preco').value),
-                imagem_url: document.getElementById('imagem_url').value.trim(),
-                descricao: document.getElementById('descricao').value.trim()
-            };
-
-            const res = await fetch('/api/produtos', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (res.ok) {
-                emitirFeedback('Produto adicionado ao catálogo!');
-                e.target.reset();
-                await carregarCatalogo();
-                popularSelects();
-            }
-        });
-
-        async function removerItem(id) {
-            if (!confirm('Deseja excluir este item?')) return;
-            const res = await fetch(`/api/produtos?id=${id}`, { method: 'DELETE' });
-            if (res.ok) {
-                emitirFeedback('Item excluído com sucesso');
-                await carregarCatalogo();
-                popularSelects();
-            }
-        }
-
-        // Cadastro de Equipe
-        document.getElementById('form-equipe').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const payload = {
-                nome: document.getElementById('eq-nome').value,
-                cargo: document.getElementById('eq-cargo').value,
-                chave_acesso: document.getElementById('eq-chave').value
-            };
-            const res = await fetch('/api/funcionarios', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (res.ok) {
-                emitirFeedback('Colaborador cadastrado!');
-                e.target.reset();
-                await carregarEquipe();
-                popularSelects();
-            }
-        });
-
-        // QR Code e Impressão
-        function gerarQRCodeMesa() {
-            const num = document.getElementById('num-mesa').value.padStart(2, '0');
-            const baseUrl = document.getElementById('url-base-qr').value.trim();
-            const urlFinal = `${baseUrl}?mesa=${num}`;
-
-            document.getElementById('resultado-qr').style.display = 'block';
-            const qrContainer = document.getElementById('qrcode-preview');
-            qrContainer.innerHTML = '';
-            new QRCode(qrContainer, {
-                text: urlFinal,
-                width: 180,
-                height: 180,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
-
-        function imprimirAdesivoMesa() {
-            const num = document.getElementById('num-mesa').value.padStart(2, '0');
-            const qrImg = document.querySelector('#qrcode-preview img').src;
-            const janela = window.open('', '_blank');
-            janela.document.write(`
-                <html>
-                <body style="font-family:sans-serif; text-align:center; padding:40px;">
-                    <div style="border:2px dashed #333; padding:30px; display:inline-block; border-radius:16px;">
-                        <h1 style="margin:0;">FRUTOS DE GOIÁS</h1>
-                        <h2 style="color:#00AA44; margin:10px 0 20px;">MESA ${num}</h2>
-                        <img src="${qrImg}" width="220" />
-                        <p style="font-size:14px; color:#555; margin-top:15px;">Aponte a câmara para abrir o cardápio e pedir</p>
-                    </div>
-                    <script>window.onload = function() { window.print(); window.close(); }<\/script>
-                </body>
-                </html>
-            `);
-        }
-
-        function abrirCardapioImpressao() {
-            const categorias = {
-                'picoles': 'Picolés Artesanais',
-                'gelados': 'Taças & Gelados',
-                'acai': 'Açaí Natural',
-                'especiais': 'Especiais da Casa'
-            };
-
-            let conteudoHTML = '';
-            for (const [slug, nomeCat] of Object.entries(categorias)) {
-                const itens = catalogo.filter(p => p.categoria === slug && p.disponivel !== false);
-                if (itens.length === 0) continue;
-
-                conteudoHTML += `<div style="break-inside:avoid; margin-bottom:25px;"><h3 style="font-family:'Playfair Display',serif; font-size:18px; border-bottom:1px solid #ddd; padding-bottom:4px; color:#008833;">${nomeCat}</h3>`;
-                itens.forEach(item => {
-                    const cod = item.codigo || `#${String(item.id).padStart(2, '0')}`;
-                    const preco = parseFloat(item.preco).toFixed(2).replace('.', ',');
-                    conteudoHTML += `
-                        <div style="display:flex; align-items:baseline; margin-bottom:10px;">
-                            <span style="font-weight:700; color:#008833; font-size:13px; font-family:monospace; margin-right:8px;">${cod}</span>
-                            <span style="font-weight:600; font-size:13px;">${item.nome}</span>
-                            <span style="flex-grow:1; border-bottom:1px dotted #aaa; margin:0 8px;"></span>
-                            <span style="font-weight:700; font-size:13px;">R$ ${preco}</span>
-                        </div>
-                    `;
-                });
-                conteudoHTML += `</div>`;
-            }
-
-            const janela = window.open('', '_blank');
-            janela.document.write(`
-                <html>
-                <head>
-                    <title>Cardápio Impresso - Frutos de Goiás</title>
-                    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-                </head>
-                <body style="font-family:'Plus Jakarta Sans',sans-serif; color:#111; padding:20px;">
-                    <div style="text-align:center; border-bottom:2px solid #111; padding-bottom:15px; margin-bottom:20px;">
-                        <h1 style="font-family:'Playfair Display',serif; font-size:30px; margin:0;">FRUTOS DE GOIÁS</h1>
-                        <p style="margin:5px 0 0; font-size:13px; color:#555;">CARDÁPIO ARTESANAL</p>
-                    </div>
-                    <div style="column-count:2; column-gap:30px;">${conteudoHTML}</div>
-                    <script>window.onload = function() { window.print(); }<\/script>
-                </body>
-                </html>
-            `);
-        }
-
-        document.addEventListener('DOMContentLoaded', inicializarPainel);
-    </script>
+    <!-- Script modular com importação ES6 -->
+    <script type="module" src="js/admin.js?v=1"></script>
 </body>
 </html>
